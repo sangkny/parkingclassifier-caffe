@@ -1,6 +1,6 @@
 conv: (feautre map max: 50) output 
 fc input: max 1024 
 
-그래서.. convolution layers 들의 feature map 수 (필터수, output) [1:50], FCL (Linear input)은 1024 로 제한이 되어 있어.. 난관이 있네..
-내가 키워도 된다고는 했으나 이렇게 제한이 작은 줄은 몰랐네. 미안하네. 
+.. feature map of convolution layers(# of filters, output) [1:50], FCL (Linear inputs) is limited to 1024
+
 
