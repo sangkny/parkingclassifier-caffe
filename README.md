@@ -25,7 +25,9 @@ _xxx_solver.prototxt
 
 1-1. Saving the information to display the curve after training as follows:
 	GLOG_logtostderr=1 ./build/examples/train_net.bin solver.prototxt 2> caffe.log 
-1-2. This command does not display the process status dudring training, instead it saves the log information into the given log file (caffe.log)
+1-2. This command does not display the process status during training, instead it saves the log information into the given log file (caffe.log)
+1-3. To plot the log, use parse_log.py and plot the graph with plot_caffe.py I made.
+
 
 # convert to binary for the company
 1. ./build/tools/ive_tool_caffe 1 h w ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
