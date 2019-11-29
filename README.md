@@ -12,7 +12,8 @@ and it can be used inside the Caffe
 # model files
 lenet32x40_1 : 20190820 12phase lenet32x40_1
 lenet32x40_2 : 20191125 6 phase 10000 samples training 14->28: acc: 99.5
-lenet32x40_3 : 20191126 b pahse 10000 samples training 50->28: acc: 
+lenet32x40_3 : 20191126 6 pahse 10000 samples training 50->28: acc: 99.7
+lenet32x40_3_1:LeNet32x40_2 Test under lenet32x40_3 
 
 # model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
@@ -32,8 +33,14 @@ _xxx_solver.prototxt
 # convert to binary for the company
 1. ./build/tools/ive_tool_caffe 1 h w ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
 	/workspace/parkingclassifier-caffe/lenet32x40_2.caffemodel /workspace/parkingclassifier-caffe/lenet32x40_2.bin
-	
+2. ** important ** To convert ive-caffe in a success into a bin file, the prototxt 	should include TEST only in accurrach layer at the last part. However, to make log and draw the accuracy graphs for TRAIN/TEST phases, the last accuracy layer should include both.
 # Note:
 Using docker 
 	1. in windows, Lower/Capital character file name is not effective
 	2. in ubuntu, it is sensitive
+	
+# Draw the Accuracy/Loss Graph
+0. We assumed that we got log file during the Train phase as the above <traing with log>
+1. ./tools/extra/parse_log.py /path/to/outputimage/example.png /path/from/logfile/xxx.log 
+2. use plot-caffe.py I made 
+3. Please include Train/Test phases in the Accuracy Layer. IVE does not allow the train phase included in accurracy Layer in the prototxt file. However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.

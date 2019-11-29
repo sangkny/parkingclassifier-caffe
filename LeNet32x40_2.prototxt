@@ -1,4 +1,4 @@
-name: "LeNet32x40_3"
+name: "LeNet32x40_1"
 layer {
   name: "nexpa"
   type: "Data"
@@ -12,7 +12,7 @@ layer {
 	mirror: true		
   }
   data_param {
-    source: "/workspace/parkingclassifier-caffe/20191126_data/20191126_data_train_lmdb"
+    source: "/workspace/parkingclassifier-caffe/20191125_data/20191125_data_train_lmdb"
     batch_size: 64
     backend: LMDB
   }
@@ -30,7 +30,7 @@ layer {
 	mirror: true		
   }
   data_param {
-    source: "/workspace/parkingclassifier-caffe/20191126_data/20191126_data_test_lmdb"
+    source: "/workspace/parkingclassifier-caffe/20191125_data/20191125_data_test_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -41,7 +41,7 @@ layer {
   bottom: "data1"
   top: "conv_blob1"
   convolution_param {
-    num_output: 50
+    num_output: 14
     bias_term: true    
     kernel_size: 3
     group: 1
@@ -67,8 +67,8 @@ layer {
   bottom: "relu_blob1"
   top: "conv_blob2"
   convolution_param {
-    num_output: 50
-    bias_term: true   
+    num_output: 14
+    bias_term: true    
     kernel_size: 3
     group: 1
     stride: 1
@@ -227,6 +227,9 @@ layer {
   bottom: "fc_blob3"
   bottom: "label"
   top: "accuracy"
+  include {
+    phase: TEST
+  }
 }
 layer {
   name: "loss"

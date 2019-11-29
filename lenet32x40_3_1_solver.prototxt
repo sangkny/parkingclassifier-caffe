@@ -1,5 +1,5 @@
 # The train/test net protocol buffer definition
-net: "/workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt"
+net: "/workspace/parkingclassifier-caffe/LeNet32x40_3_1_ive.prototxt"
 # test_iter specifies how many forward passes the test should carry out.
 # In the case of MNIST, we have test batch size 100 and 100 test iterations,
 # covering the full 10,000 testing images.
@@ -20,6 +20,6 @@ display: 100
 max_iter: 10000
 # snapshot intermediate results
 snapshot: 500
-snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet32x40_3_ive"
+snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet32x40_3_1_ive"
 # solver mode: CPU or GPU
 solver_mode: CPU 
