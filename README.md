@@ -3,6 +3,11 @@
 Produced files (components) from caffe-related training data
 and it can be used inside the Caffe
 
+#### update
+##### 20191221: train with lenet32x40_3 for 20191221_data which has been augmented with options of constras, sat, hue, and rnd vertical flip.
+
+# Procedure 
+
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
 0. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/) 
 1. first edit and run list_files.sh in the source directory (ex. /workspace/parkingclassifier-caffe/20190812_data/)

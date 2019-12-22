@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 FileName = 'caffe-log-plot'
-train_log = pd.read_csv("./caffe.log.train")
-test_log = pd.read_csv("./caffe.log.test")
+train_log = pd.read_csv("./20191221_data/ive_train.log.train")
+test_log = pd.read_csv("./20191221_data/ive_train.log.test")
 _, ax1 = plt.subplots(figsize=(15, 10))
 ax2 = ax1.twinx()
 plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')
