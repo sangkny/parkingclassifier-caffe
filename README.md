@@ -44,7 +44,8 @@ _xxx_solver.prototxt
 Using docker 
 	1. in windows, Lower/Capital character file name is not effective
 	2. in ubuntu, it is sensitive
-	3. sudo docker run -it 
+	3. sudo docker run -it --ipc=host -p 9428:22 -p 9488:8888 -p 9482:6006 -v ~/workspace:/workspace sangkny/caffe:caffe-ive-bin /bin/bash
+	4. under the docker, cd /opt/source/caffe (here is caffe root)
 	
 # Draw the Accuracy/Loss Graph
 0. We assumed that we got log file during the Train phase as the above <traing with log>
