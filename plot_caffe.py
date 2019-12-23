@@ -1,11 +1,20 @@
 # display caffe log
+"""## this py code can be used as csv file reader.
+# 0. in the caffe, create log file with caffe train -solver /path/to/solver.prototxt 2>&1 | tee caffe.log
+# 1. after training, type './tools/extra/parse_log.py /path/to/caffe.log /path/to/ourdir/
+# 2. then edit this file to save
+## --------------------------------------------------
+## to plot train/test acc/loss
+## you need to phase: TRAIN/TEST in the input/outs for configureation file such as ive_3.prototxt
+## However, you need only TEST phase at the end of the file when converting caffemodel to bin file
+"""
 import pandas as pd
 import matplotlib.pyplot as plt
 
 IsPlotSave = True
-FileName = 'caffe-log-plot'
-train_log = pd.read_csv("./20191221_data/ive_train.log.train")
-test_log = pd.read_csv("./20191221_data/ive_train.log.test")
+FileName = 'caffe-log-plot-20191221-IVE-Test-Only'
+train_log = pd.read_csv("./20191221_data/ive_test_only.log.test") # when test only exists, train_log == test_log
+test_log = pd.read_csv("./20191221_data/ive_test_only.log.test")
 _, ax1 = plt.subplots(figsize=(15, 10))
 ax2 = ax1.twinx()
 plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')
