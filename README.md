@@ -2,7 +2,7 @@
 Produced files (components) from caffe-related training data
 and it can be used inside the Caffe
 
-#### update
+#### Update 
 - 20191221: train with lenet32x40_3 for 20191221_data which has been augmented with options of constras, sat, hue, and rnd vertical flip.
 
 # Procedure 
@@ -12,18 +12,19 @@ and it can be used inside the Caffe
 2. edit create_pk_class.sh and run it to generate database files
 3. train the data after editting a solver file.
 
-# model files
+# Model files and their descriptions
 - lenet32x40_1 : 20190820 12phase lenet32x40_1
 - lenet32x40_2 : 20191125 6 phase 10000 samples training 14->28: acc: 99.5
-- lenet32x40_3 : 20191126 6 pahse 10000 samples training 50->28: acc: 99.7
+- lenet32x40_3 : 20191126 6 phase 10000 samples training 50->28: acc: 99.7
 - lenet32x40_3_1:LeNet32x40_2 Test under lenet32x40_3 
+- lenet32x40_3 : 20191221 6 phase all data(46000 each class) including augmented data (contrast: 0.2, sat: 0.2, hue: 0.2 with data_split)
 
-# model file confirmation for the given system
+# Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
-# solver
+# Solver
 _xxx_solver.prototxt
 
-# training with log 
+# Training with log 
 0. in the caffe root
 1. ./build/tools/caffe train -solver /workspace/parkingclassifier-caffe/xxx_solover.prototxt 2>&1 | tee your_name.log
 
@@ -33,17 +34,21 @@ _xxx_solver.prototxt
 * 1-3. To plot the log, use parse_log.py and plot the graph with plot_caffe.py I made.
 
 
-# convert to binary for the company
+# Converting to binary for the company
 1. ./build/tools/ive_tool_caffe 1 h w ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
 	/workspace/parkingclassifier-caffe/lenet32x40_2.caffemodel /workspace/parkingclassifier-caffe/lenet32x40_2.bin
-2. ** important ** To convert ive-caffe in a success into a bin file, the prototxt 	should include TEST only in accurrach layer at the last part. However, to make log and draw the accuracy graphs for TRAIN/TEST phases, the last accuracy layer should include both.
+2. ** important ** To convert ive-caffe in a success into a bin file, the prototxt 	should include TEST only in accuracy layer at the last part. 
+- 2.1 However, to make log and draw the accuracy graphs for TRAIN/TEST phases, the last accuracy layer should include both.
+
 # Note:
 Using docker 
 	1. in windows, Lower/Capital character file name is not effective
 	2. in ubuntu, it is sensitive
+	3. sudo docker run -it 
 	
 # Draw the Accuracy/Loss Graph
 0. We assumed that we got log file during the Train phase as the above <traing with log>
-1. ./tools/extra/parse_log.py /path/to/outputimage/example.png /path/from/logfile/xxx.log 
+1. ./tools/extra/parse_log.py /path/from/logfile/xxx.log /path/to/outputimage/example.png  
 2. use plot-caffe.py I made 
-3. Please include Train/Test phases in the Accuracy Layer. IVE does not allow the train phase included in accurracy Layer in the prototxt file. However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.
+3. Please include Train/Test phases in the Accuracy Layer. IVE does not allow the train phase included in accurracy Layer in the prototxt file. 
+- 3.1 However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.
