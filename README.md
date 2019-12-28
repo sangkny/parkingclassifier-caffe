@@ -3,7 +3,8 @@ Produced files (components) from caffe-related training data
 and it can be used inside the Caffe
 
 #### Update 
-- 20191221: train with lenet32x40_3 for 20191221_data which has been augmented with options of constras, sat, hue, and rnd vertical flip.
+- 20191221: train with lenet32x40_3 for 20191221_data which has been augmented with options of constras, sat, hue, and rnd vertical flip only in training phase.
+- 20191228: train with lenet32x40_3 for 20191228_data changing brightness 0.2 to 0.4 of 20191221 data
 
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -17,7 +18,7 @@ and it can be used inside the Caffe
 - lenet32x40_2 : 20191125 6 phase 10000 samples training 14->28: acc: 99.5
 - lenet32x40_3 : 20191126 6 phase 10000 samples training 50->28: acc: 99.7
 - lenet32x40_3_1:LeNet32x40_2 Test under lenet32x40_3 
-- lenet32x40_3 : 20191221 6 phase all data(46000 each class) including augmented data (contrast: 0.2, sat: 0.2, hue: 0.2 with data_split)
+- lenet32x40_3 : 20191221 6 phase all data(46000 each class) including augmented data (contrast: 0.2, sat: 0.2, hue: 0.2 with data_split): acc: 99.5
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
