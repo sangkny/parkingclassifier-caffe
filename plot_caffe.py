@@ -8,13 +8,23 @@
 ## you need to phase: TRAIN/TEST in the input/outs for configureation file such as ive_3.prototxt
 ## However, you need only TEST phase at the end of the file when converting caffemodel to bin file
 """
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
 IsPlotSave = True
-FileName = 'caffe-log-plot-20191221-IVE-Test-Only'
-train_log = pd.read_csv("./20191221_data/ive_test_only.log.test") # when test only exists, train_log == test_log
-test_log = pd.read_csv("./20191221_data/ive_test_only.log.test")
+TrainTestBoth = False
+FileName = 'caffe-log-plot-20191228-brightness_0.4_Test'
+dirPath = './20191228_data'
+logFileName = 'train_br_040'
+outFile = os.path.join(dirPath,logFileName)
+if TrainTestBoth:
+    train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
+    test_log = pd.read_csv(str(outFile + ".log.test"))
+else:
+    train_log = pd.read_csv(str(outFile + ".log.test")) # when test only exists, train_log == test_log
+    test_log = pd.read_csv(str(outFile + ".log.test"))
+
 _, ax1 = plt.subplots(figsize=(15, 10))
 ax2 = ax1.twinx()
 plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')

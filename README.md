@@ -8,9 +8,10 @@ and it can be used inside the Caffe
 
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
-0. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/) 
+0. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/)
+0. edit xxx.prototxt for a target database and xxx_solver.prototxt for the xxx.prototxt location 
 1. first edit and run list_files.sh in the source directory (ex. /workspace/parkingclassifier-caffe/20190812_data/)
-2. edit create_pk_class.sh and run it to generate database files
+2. edit create_pk_class.sh and run it to generate database files in the caffe 
 3. train the data after editting a solver file.
 
 # Model files and their descriptions
@@ -19,6 +20,7 @@ and it can be used inside the Caffe
 - lenet32x40_3 : 20191126 6 phase 10000 samples training 50->28: acc: 99.7
 - lenet32x40_3_1:LeNet32x40_2 Test under lenet32x40_3 
 - lenet32x40_3 : 20191221 6 phase all data(46000 each class) including augmented data (contrast: 0.2, sat: 0.2, hue: 0.2 with data_split): acc: 99.5
+- lenet32x40_3 : 20191228 6 phase all data(46000 each class) including augmented data (contrast: 0.4, sat: 0.2, hue: 0.2 with data_split): acc: 99.75
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
@@ -50,7 +52,7 @@ Using docker
 	
 # Draw the Accuracy/Loss Graph
 0. We assumed that we got log file during the Train phase as the above <traing with log>
-1. ./tools/extra/parse_log.py /path/from/logfile/xxx.log /path/to/outputimage/example.png  
+1. In caffe, ./tools/extra/parse_log.py /path/from/logfile/xxx.log /path/to/output => makes xx.train and xx.test  
 2. use plot-caffe.py I made 
 3. Please include Train/Test phases in the Accuracy Layer. IVE does not allow the train phase included in accurracy Layer in the prototxt file. 
 - 3.1 However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.
