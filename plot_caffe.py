@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 TrainTestBoth = False
-FileName = 'caffe-log-plot-20191228-brightness_0.4_Test'
-dirPath = './20191228_data'
-logFileName = 'train_br_040'
+FileName = 'caffe-log-plot-20200202-br-ct-sat_0.4_Test'
+dirPath = './20200202_data'
+logFileName = 'train_20200202_br_ctr_sat_040'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
