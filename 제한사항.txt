@@ -8,3 +8,8 @@ fc input: max 1024
 ./tools/extra/plot_training_log.py.example 0 /workspace/parkingclassifier-caffe/20191126_data/save_0.png /workspace/parkingclassifier-caffe/20191126_data/caffe.log
 
 
+테스트 중
+lenet32x40_3_ive_20200202_iter_19000
+
+
+

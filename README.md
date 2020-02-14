@@ -67,3 +67,12 @@ Using docker
 2. use plot-caffe.py I made 
 3. Please include Train/Test phases in the Accuracy Layer. IVE does not allow the train phase included in accurracy Layer in the prototxt file. 
 - 3.1 However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.
+
+# Fine-Tuning
+    https://hamait.tistory.com/520 
+    https://medium.com/@alexrachnog/using-caffe-with-your-own-dataset-b0ade5d71233
+
+0. solver : base_lr to be smaller
+1. prototxt: insert parameter with lr_mult with higher score after rename the name of proper Layer (lr_mult = 0 in other layers no to be updated)
+2. then the Layer will be trained quckly while previous trained model changes gradually according to base_lr
+3. stepsize in solver will be reduced to small
