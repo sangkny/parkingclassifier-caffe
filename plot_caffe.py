@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 TrainTestBoth = False
-FileName = 'caffe-log-plot-20200202-br-ct-sat_0.4_Test'
-dirPath = './20200202_data'
-logFileName = 'train_20200202_br_ctr_sat_040'
+FileName = 'caffe-log-plot-20200217-br-ctr-sat_040_only'
+dirPath = './20200217_data'
+logFileName = 'train_20200217_br_ctr_sat_040_only'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
@@ -39,3 +39,8 @@ plt.legend([plot0, plot1, plot2, plot3], ['Train Acc', 'Train loss', 'Test Acc',
 
 plt.savefig('{}.png'.format(FileName))
 plt.show()
+import numpy as np
+log_num = list(train_log["NumIters"])
+log_acc = list(train_log["accuracy"])
+idx = np.argmax(log_acc)
+print('max accuray {} at {} with idx {}'.format(log_acc[idx],int(log_num[idx]), idx))
