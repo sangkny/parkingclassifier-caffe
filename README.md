@@ -13,7 +13,9 @@ and it can be used inside the Caffe
 - 20191221: train with lenet32x40_3 for 20191221_data which has been augmented with options of contrast, sat, hue, and rnd vertical flip only in training phase.
 - 20191228: train with lenet32x40_3 for 20191228_data changing brightness 0.2 to 0.4 of 20191221 data
 - 20200202: train with lenet32x40_3 for 20200202_data changing br, cont, sat to 0.4 of 20191221 data
-- 20200204: svg_object_detect.py for detecting the objects using the given models
+- 20200204: svg_object_detect.py for detecting the objects using the given models, solve with pythorch
+- 20200217: train with lenet32x40_3 for 20200217_data changing br, cont, sat to 0.4 with augmenation only without original data mixing
+
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
 1. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/)
