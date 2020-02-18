@@ -1,0 +1,1598 @@
+I0218 05:07:56.300055   246 caffe.cpp:210] Use CPU.
+I0218 05:07:56.300333   246 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 500
+base_lr: 0.01
+display: 100
+max_iter: 20000
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 500
+snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218"
+solver_mode: CPU
+net: "/workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+I0218 05:07:56.300508   246 solver.cpp:91] Creating training net from net file: /workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt
+I0218 05:07:56.300770   246 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer nexpa
+I0218 05:07:56.300809   246 net.cpp:322] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy
+I0218 05:07:56.300900   246 net.cpp:58] Initializing net from parameters: 
+name: "LeNet32x40_3"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "nexpa"
+  type: "Data"
+  top: "data1"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+    mirror: true
+  }
+  data_param {
+    source: "/workspace/parkingclassifier-caffe/20200218_data/20200218_data_train_lmdb"
+    batch_size: 64
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data1"
+  top: "conv_blob1"
+  convolution_param {
+    num_output: 50
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv_blob1"
+  top: "relu_blob1"
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "relu_blob1"
+  top: "conv_blob2"
+  convolution_param {
+    num_output: 50
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv_blob2"
+  top: "relu_blob2"
+}
+layer {
+  name: "max_pool1"
+  type: "Pooling"
+  bottom: "relu_blob2"
+  top: "max_pool_blob1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "max_pool_blob1"
+  top: "conv_blob3"
+  convolution_param {
+    num_output: 28
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv_blob3"
+  top: "relu_blob3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "relu_blob3"
+  top: "conv_blob4"
+  convolution_param {
+    num_output: 28
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv_blob4"
+  top: "relu_blob4"
+}
+layer {
+  name: "max_pool2"
+  type: "Pooling"
+  bottom: "relu_blob4"
+  top: "max_pool_blob2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "fc1"
+  type: "InnerProduct"
+  bottom: "max_pool_blob2"
+  top: "fc_blob1"
+  inner_product_param {
+    num_output: 256
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "fc_blob1"
+  top: "relu_blob5"
+}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "relu_blob5"
+  top: "fc_blob2"
+  inner_product_param {
+    num_output: 84
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc_blob2"
+  top: "relu_blob6"
+}
+layer {
+  name: "fc3"
+  type: "InnerProduct"
+  bottom: "relu_blob6"
+  top: "fc_blob3"
+  inner_product_param {
+    num_output: 2
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc_blob3"
+  bottom: "label"
+  top: "loss"
+}
+I0218 05:07:56.300971   246 layer_factory.hpp:77] Creating layer nexpa
+I0218 05:07:56.301144   246 net.cpp:100] Creating Layer nexpa
+I0218 05:07:56.301154   246 net.cpp:408] nexpa -> data1
+I0218 05:07:56.301172   246 net.cpp:408] nexpa -> label
+I0218 05:07:56.302947   248 db_lmdb.cpp:35] Opened lmdb /workspace/parkingclassifier-caffe/20200218_data/20200218_data_train_lmdb
+I0218 05:07:56.303041   246 data_layer.cpp:41] output data size: 64,1,32,40
+I0218 05:07:56.303674   246 net.cpp:150] Setting up nexpa
+I0218 05:07:56.303704   246 net.cpp:157] Top shape: 64 1 32 40 (81920)
+I0218 05:07:56.303709   246 net.cpp:157] Top shape: 64 (64)
+I0218 05:07:56.303712   246 net.cpp:165] Memory required for data: 327936
+I0218 05:07:56.303719   246 layer_factory.hpp:77] Creating layer conv1
+I0218 05:07:56.303735   246 net.cpp:100] Creating Layer conv1
+I0218 05:07:56.303740   246 net.cpp:434] conv1 <- data1
+I0218 05:07:56.303750   246 net.cpp:408] conv1 -> conv_blob1
+I0218 05:07:56.303786   246 net.cpp:150] Setting up conv1
+I0218 05:07:56.303791   246 net.cpp:157] Top shape: 64 50 30 38 (3648000)
+I0218 05:07:56.303795   246 net.cpp:165] Memory required for data: 14919936
+I0218 05:07:56.303804   246 layer_factory.hpp:77] Creating layer relu1
+I0218 05:07:56.303810   246 net.cpp:100] Creating Layer relu1
+I0218 05:07:56.303814   246 net.cpp:434] relu1 <- conv_blob1
+I0218 05:07:56.303818   246 net.cpp:408] relu1 -> relu_blob1
+I0218 05:07:56.303827   246 net.cpp:150] Setting up relu1
+I0218 05:07:56.303830   246 net.cpp:157] Top shape: 64 50 30 38 (3648000)
+I0218 05:07:56.303833   246 net.cpp:165] Memory required for data: 29511936
+I0218 05:07:56.303836   246 layer_factory.hpp:77] Creating layer conv2
+I0218 05:07:56.303843   246 net.cpp:100] Creating Layer conv2
+I0218 05:07:56.303846   246 net.cpp:434] conv2 <- relu_blob1
+I0218 05:07:56.303851   246 net.cpp:408] conv2 -> conv_blob2
+I0218 05:07:56.304003   246 net.cpp:150] Setting up conv2
+I0218 05:07:56.304008   246 net.cpp:157] Top shape: 64 50 28 36 (3225600)
+I0218 05:07:56.304013   246 net.cpp:165] Memory required for data: 42414336
+I0218 05:07:56.304018   246 layer_factory.hpp:77] Creating layer relu2
+I0218 05:07:56.304023   246 net.cpp:100] Creating Layer relu2
+I0218 05:07:56.304026   246 net.cpp:434] relu2 <- conv_blob2
+I0218 05:07:56.304030   246 net.cpp:408] relu2 -> relu_blob2
+I0218 05:07:56.304035   246 net.cpp:150] Setting up relu2
+I0218 05:07:56.304039   246 net.cpp:157] Top shape: 64 50 28 36 (3225600)
+I0218 05:07:56.304042   246 net.cpp:165] Memory required for data: 55316736
+I0218 05:07:56.304045   246 layer_factory.hpp:77] Creating layer max_pool1
+I0218 05:07:56.304049   246 net.cpp:100] Creating Layer max_pool1
+I0218 05:07:56.304052   246 net.cpp:434] max_pool1 <- relu_blob2
+I0218 05:07:56.304056   246 net.cpp:408] max_pool1 -> max_pool_blob1
+I0218 05:07:56.304070   246 net.cpp:150] Setting up max_pool1
+I0218 05:07:56.304075   246 net.cpp:157] Top shape: 64 50 14 18 (806400)
+I0218 05:07:56.304077   246 net.cpp:165] Memory required for data: 58542336
+I0218 05:07:56.304080   246 layer_factory.hpp:77] Creating layer conv3
+I0218 05:07:56.304086   246 net.cpp:100] Creating Layer conv3
+I0218 05:07:56.304090   246 net.cpp:434] conv3 <- max_pool_blob1
+I0218 05:07:56.304093   246 net.cpp:408] conv3 -> conv_blob3
+I0218 05:07:56.304183   246 net.cpp:150] Setting up conv3
+I0218 05:07:56.304188   246 net.cpp:157] Top shape: 64 28 12 16 (344064)
+I0218 05:07:56.304191   246 net.cpp:165] Memory required for data: 59918592
+I0218 05:07:56.304198   246 layer_factory.hpp:77] Creating layer relu3
+I0218 05:07:56.304201   246 net.cpp:100] Creating Layer relu3
+I0218 05:07:56.304204   246 net.cpp:434] relu3 <- conv_blob3
+I0218 05:07:56.304209   246 net.cpp:408] relu3 -> relu_blob3
+I0218 05:07:56.304214   246 net.cpp:150] Setting up relu3
+I0218 05:07:56.304219   246 net.cpp:157] Top shape: 64 28 12 16 (344064)
+I0218 05:07:56.304224   246 net.cpp:165] Memory required for data: 61294848
+I0218 05:07:56.304236   246 layer_factory.hpp:77] Creating layer conv4
+I0218 05:07:56.304244   246 net.cpp:100] Creating Layer conv4
+I0218 05:07:56.304248   246 net.cpp:434] conv4 <- relu_blob3
+I0218 05:07:56.304252   246 net.cpp:408] conv4 -> conv_blob4
+I0218 05:07:56.304309   246 net.cpp:150] Setting up conv4
+I0218 05:07:56.304313   246 net.cpp:157] Top shape: 64 28 10 14 (250880)
+I0218 05:07:56.304316   246 net.cpp:165] Memory required for data: 62298368
+I0218 05:07:56.304320   246 layer_factory.hpp:77] Creating layer relu4
+I0218 05:07:56.304324   246 net.cpp:100] Creating Layer relu4
+I0218 05:07:56.304327   246 net.cpp:434] relu4 <- conv_blob4
+I0218 05:07:56.304332   246 net.cpp:408] relu4 -> relu_blob4
+I0218 05:07:56.304337   246 net.cpp:150] Setting up relu4
+I0218 05:07:56.304342   246 net.cpp:157] Top shape: 64 28 10 14 (250880)
+I0218 05:07:56.304344   246 net.cpp:165] Memory required for data: 63301888
+I0218 05:07:56.304347   246 layer_factory.hpp:77] Creating layer max_pool2
+I0218 05:07:56.304353   246 net.cpp:100] Creating Layer max_pool2
+I0218 05:07:56.304356   246 net.cpp:434] max_pool2 <- relu_blob4
+I0218 05:07:56.304360   246 net.cpp:408] max_pool2 -> max_pool_blob2
+I0218 05:07:56.304365   246 net.cpp:150] Setting up max_pool2
+I0218 05:07:56.304369   246 net.cpp:157] Top shape: 64 28 5 7 (62720)
+I0218 05:07:56.304373   246 net.cpp:165] Memory required for data: 63552768
+I0218 05:07:56.304376   246 layer_factory.hpp:77] Creating layer fc1
+I0218 05:07:56.304383   246 net.cpp:100] Creating Layer fc1
+I0218 05:07:56.304385   246 net.cpp:434] fc1 <- max_pool_blob2
+I0218 05:07:56.304389   246 net.cpp:408] fc1 -> fc_blob1
+I0218 05:07:56.305972   246 net.cpp:150] Setting up fc1
+I0218 05:07:56.305979   246 net.cpp:157] Top shape: 64 256 (16384)
+I0218 05:07:56.305981   246 net.cpp:165] Memory required for data: 63618304
+I0218 05:07:56.305989   246 layer_factory.hpp:77] Creating layer relu5
+I0218 05:07:56.305992   246 net.cpp:100] Creating Layer relu5
+I0218 05:07:56.305995   246 net.cpp:434] relu5 <- fc_blob1
+I0218 05:07:56.306000   246 net.cpp:408] relu5 -> relu_blob5
+I0218 05:07:56.306005   246 net.cpp:150] Setting up relu5
+I0218 05:07:56.306008   246 net.cpp:157] Top shape: 64 256 (16384)
+I0218 05:07:56.306011   246 net.cpp:165] Memory required for data: 63683840
+I0218 05:07:56.306015   246 layer_factory.hpp:77] Creating layer fc2
+I0218 05:07:56.306018   246 net.cpp:100] Creating Layer fc2
+I0218 05:07:56.306021   246 net.cpp:434] fc2 <- relu_blob5
+I0218 05:07:56.306028   246 net.cpp:408] fc2 -> fc_blob2
+I0218 05:07:56.306160   246 net.cpp:150] Setting up fc2
+I0218 05:07:56.306166   246 net.cpp:157] Top shape: 64 84 (5376)
+I0218 05:07:56.306169   246 net.cpp:165] Memory required for data: 63705344
+I0218 05:07:56.306174   246 layer_factory.hpp:77] Creating layer relu6
+I0218 05:07:56.306176   246 net.cpp:100] Creating Layer relu6
+I0218 05:07:56.306180   246 net.cpp:434] relu6 <- fc_blob2
+I0218 05:07:56.306183   246 net.cpp:408] relu6 -> relu_blob6
+I0218 05:07:56.306187   246 net.cpp:150] Setting up relu6
+I0218 05:07:56.306190   246 net.cpp:157] Top shape: 64 84 (5376)
+I0218 05:07:56.306193   246 net.cpp:165] Memory required for data: 63726848
+I0218 05:07:56.306196   246 layer_factory.hpp:77] Creating layer fc3
+I0218 05:07:56.306201   246 net.cpp:100] Creating Layer fc3
+I0218 05:07:56.306205   246 net.cpp:434] fc3 <- relu_blob6
+I0218 05:07:56.306210   246 net.cpp:408] fc3 -> fc_blob3
+I0218 05:07:56.306219   246 net.cpp:150] Setting up fc3
+I0218 05:07:56.306223   246 net.cpp:157] Top shape: 64 2 (128)
+I0218 05:07:56.306226   246 net.cpp:165] Memory required for data: 63727360
+I0218 05:07:56.306231   246 layer_factory.hpp:77] Creating layer loss
+I0218 05:07:56.306236   246 net.cpp:100] Creating Layer loss
+I0218 05:07:56.306239   246 net.cpp:434] loss <- fc_blob3
+I0218 05:07:56.306242   246 net.cpp:434] loss <- label
+I0218 05:07:56.306246   246 net.cpp:408] loss -> loss
+I0218 05:07:56.306254   246 layer_factory.hpp:77] Creating layer loss
+I0218 05:07:56.306267   246 net.cpp:150] Setting up loss
+I0218 05:07:56.306272   246 net.cpp:157] Top shape: (1)
+I0218 05:07:56.306282   246 net.cpp:160]     with loss weight 1
+I0218 05:07:56.306293   246 net.cpp:165] Memory required for data: 63727364
+I0218 05:07:56.306296   246 net.cpp:226] loss needs backward computation.
+I0218 05:07:56.306299   246 net.cpp:226] fc3 needs backward computation.
+I0218 05:07:56.306303   246 net.cpp:226] relu6 needs backward computation.
+I0218 05:07:56.306305   246 net.cpp:226] fc2 needs backward computation.
+I0218 05:07:56.306308   246 net.cpp:226] relu5 needs backward computation.
+I0218 05:07:56.306311   246 net.cpp:226] fc1 needs backward computation.
+I0218 05:07:56.306313   246 net.cpp:226] max_pool2 needs backward computation.
+I0218 05:07:56.306316   246 net.cpp:226] relu4 needs backward computation.
+I0218 05:07:56.306319   246 net.cpp:226] conv4 needs backward computation.
+I0218 05:07:56.306324   246 net.cpp:226] relu3 needs backward computation.
+I0218 05:07:56.306327   246 net.cpp:226] conv3 needs backward computation.
+I0218 05:07:56.306330   246 net.cpp:226] max_pool1 needs backward computation.
+I0218 05:07:56.306334   246 net.cpp:226] relu2 needs backward computation.
+I0218 05:07:56.306335   246 net.cpp:226] conv2 needs backward computation.
+I0218 05:07:56.306339   246 net.cpp:226] relu1 needs backward computation.
+I0218 05:07:56.306341   246 net.cpp:226] conv1 needs backward computation.
+I0218 05:07:56.306344   246 net.cpp:228] nexpa does not need backward computation.
+I0218 05:07:56.306347   246 net.cpp:270] This network produces output loss
+I0218 05:07:56.306360   246 net.cpp:283] Network initialization done.
+I0218 05:07:56.306654   246 solver.cpp:181] Creating test net (#0) specified by net file: /workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt
+I0218 05:07:56.306676   246 net.cpp:322] The NetState phase (1) differed from the phase (0) specified by a rule in layer nexpa
+I0218 05:07:56.306749   246 net.cpp:58] Initializing net from parameters: 
+name: "LeNet32x40_3"
+state {
+  phase: TEST
+}
+layer {
+  name: "nexpa"
+  type: "Data"
+  top: "data1"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+    mirror: true
+  }
+  data_param {
+    source: "/workspace/parkingclassifier-caffe/20200218_data/20200218_data_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data1"
+  top: "conv_blob1"
+  convolution_param {
+    num_output: 50
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv_blob1"
+  top: "relu_blob1"
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "relu_blob1"
+  top: "conv_blob2"
+  convolution_param {
+    num_output: 50
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv_blob2"
+  top: "relu_blob2"
+}
+layer {
+  name: "max_pool1"
+  type: "Pooling"
+  bottom: "relu_blob2"
+  top: "max_pool_blob1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "max_pool_blob1"
+  top: "conv_blob3"
+  convolution_param {
+    num_output: 28
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv_blob3"
+  top: "relu_blob3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "relu_blob3"
+  top: "conv_blob4"
+  convolution_param {
+    num_output: 28
+    bias_term: true
+    kernel_size: 3
+    group: 1
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    dilation: 1
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv_blob4"
+  top: "relu_blob4"
+}
+layer {
+  name: "max_pool2"
+  type: "Pooling"
+  bottom: "relu_blob4"
+  top: "max_pool_blob2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "fc1"
+  type: "InnerProduct"
+  bottom: "max_pool_blob2"
+  top: "fc_blob1"
+  inner_product_param {
+    num_output: 256
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "fc_blob1"
+  top: "relu_blob5"
+}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "relu_blob5"
+  top: "fc_blob2"
+  inner_product_param {
+    num_output: 84
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc_blob2"
+  top: "relu_blob6"
+}
+layer {
+  name: "fc3"
+  type: "InnerProduct"
+  bottom: "relu_blob6"
+  top: "fc_blob3"
+  inner_product_param {
+    num_output: 2
+    bias_term: true
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "fc_blob3"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc_blob3"
+  bottom: "label"
+  top: "loss"
+}
+I0218 05:07:56.306815   246 layer_factory.hpp:77] Creating layer nexpa
+I0218 05:07:56.306888   246 net.cpp:100] Creating Layer nexpa
+I0218 05:07:56.306896   246 net.cpp:408] nexpa -> data1
+I0218 05:07:56.306902   246 net.cpp:408] nexpa -> label
+I0218 05:07:56.306951   250 db_lmdb.cpp:35] Opened lmdb /workspace/parkingclassifier-caffe/20200218_data/20200218_data_test_lmdb
+I0218 05:07:56.307162   246 data_layer.cpp:41] output data size: 100,1,32,40
+I0218 05:07:56.307852   246 net.cpp:150] Setting up nexpa
+I0218 05:07:56.307862   246 net.cpp:157] Top shape: 100 1 32 40 (128000)
+I0218 05:07:56.307865   246 net.cpp:157] Top shape: 100 (100)
+I0218 05:07:56.307868   246 net.cpp:165] Memory required for data: 512400
+I0218 05:07:56.307873   246 layer_factory.hpp:77] Creating layer label_nexpa_1_split
+I0218 05:07:56.307878   246 net.cpp:100] Creating Layer label_nexpa_1_split
+I0218 05:07:56.307884   246 net.cpp:434] label_nexpa_1_split <- label
+I0218 05:07:56.307890   246 net.cpp:408] label_nexpa_1_split -> label_nexpa_1_split_0
+I0218 05:07:56.307896   246 net.cpp:408] label_nexpa_1_split -> label_nexpa_1_split_1
+I0218 05:07:56.307901   246 net.cpp:150] Setting up label_nexpa_1_split
+I0218 05:07:56.307905   246 net.cpp:157] Top shape: 100 (100)
+I0218 05:07:56.307909   246 net.cpp:157] Top shape: 100 (100)
+I0218 05:07:56.307911   246 net.cpp:165] Memory required for data: 513200
+I0218 05:07:56.307914   246 layer_factory.hpp:77] Creating layer conv1
+I0218 05:07:56.307922   246 net.cpp:100] Creating Layer conv1
+I0218 05:07:56.307925   246 net.cpp:434] conv1 <- data1
+I0218 05:07:56.307930   246 net.cpp:408] conv1 -> conv_blob1
+I0218 05:07:56.307950   246 net.cpp:150] Setting up conv1
+I0218 05:07:56.307956   246 net.cpp:157] Top shape: 100 50 30 38 (5700000)
+I0218 05:07:56.307960   246 net.cpp:165] Memory required for data: 23313200
+I0218 05:07:56.307966   246 layer_factory.hpp:77] Creating layer relu1
+I0218 05:07:56.307971   246 net.cpp:100] Creating Layer relu1
+I0218 05:07:56.307973   246 net.cpp:434] relu1 <- conv_blob1
+I0218 05:07:56.307977   246 net.cpp:408] relu1 -> relu_blob1
+I0218 05:07:56.307981   246 net.cpp:150] Setting up relu1
+I0218 05:07:56.307986   246 net.cpp:157] Top shape: 100 50 30 38 (5700000)
+I0218 05:07:56.307988   246 net.cpp:165] Memory required for data: 46113200
+I0218 05:07:56.307991   246 layer_factory.hpp:77] Creating layer conv2
+I0218 05:07:56.307999   246 net.cpp:100] Creating Layer conv2
+I0218 05:07:56.308003   246 net.cpp:434] conv2 <- relu_blob1
+I0218 05:07:56.308007   246 net.cpp:408] conv2 -> conv_blob2
+I0218 05:07:56.308154   246 net.cpp:150] Setting up conv2
+I0218 05:07:56.308159   246 net.cpp:157] Top shape: 100 50 28 36 (5040000)
+I0218 05:07:56.308163   246 net.cpp:165] Memory required for data: 66273200
+I0218 05:07:56.308168   246 layer_factory.hpp:77] Creating layer relu2
+I0218 05:07:56.308179   246 net.cpp:100] Creating Layer relu2
+I0218 05:07:56.308183   246 net.cpp:434] relu2 <- conv_blob2
+I0218 05:07:56.308188   246 net.cpp:408] relu2 -> relu_blob2
+I0218 05:07:56.308193   246 net.cpp:150] Setting up relu2
+I0218 05:07:56.308197   246 net.cpp:157] Top shape: 100 50 28 36 (5040000)
+I0218 05:07:56.308199   246 net.cpp:165] Memory required for data: 86433200
+I0218 05:07:56.308202   246 layer_factory.hpp:77] Creating layer max_pool1
+I0218 05:07:56.308208   246 net.cpp:100] Creating Layer max_pool1
+I0218 05:07:56.308212   246 net.cpp:434] max_pool1 <- relu_blob2
+I0218 05:07:56.308216   246 net.cpp:408] max_pool1 -> max_pool_blob1
+I0218 05:07:56.308223   246 net.cpp:150] Setting up max_pool1
+I0218 05:07:56.308228   246 net.cpp:157] Top shape: 100 50 14 18 (1260000)
+I0218 05:07:56.308230   246 net.cpp:165] Memory required for data: 91473200
+I0218 05:07:56.308233   246 layer_factory.hpp:77] Creating layer conv3
+I0218 05:07:56.308240   246 net.cpp:100] Creating Layer conv3
+I0218 05:07:56.308243   246 net.cpp:434] conv3 <- max_pool_blob1
+I0218 05:07:56.308248   246 net.cpp:408] conv3 -> conv_blob3
+I0218 05:07:56.308336   246 net.cpp:150] Setting up conv3
+I0218 05:07:56.308342   246 net.cpp:157] Top shape: 100 28 12 16 (537600)
+I0218 05:07:56.308346   246 net.cpp:165] Memory required for data: 93623600
+I0218 05:07:56.308351   246 layer_factory.hpp:77] Creating layer relu3
+I0218 05:07:56.308356   246 net.cpp:100] Creating Layer relu3
+I0218 05:07:56.308359   246 net.cpp:434] relu3 <- conv_blob3
+I0218 05:07:56.308364   246 net.cpp:408] relu3 -> relu_blob3
+I0218 05:07:56.308369   246 net.cpp:150] Setting up relu3
+I0218 05:07:56.308372   246 net.cpp:157] Top shape: 100 28 12 16 (537600)
+I0218 05:07:56.308375   246 net.cpp:165] Memory required for data: 95774000
+I0218 05:07:56.308378   246 layer_factory.hpp:77] Creating layer conv4
+I0218 05:07:56.308385   246 net.cpp:100] Creating Layer conv4
+I0218 05:07:56.308388   246 net.cpp:434] conv4 <- relu_blob3
+I0218 05:07:56.308393   246 net.cpp:408] conv4 -> conv_blob4
+I0218 05:07:56.308449   246 net.cpp:150] Setting up conv4
+I0218 05:07:56.308459   246 net.cpp:157] Top shape: 100 28 10 14 (392000)
+I0218 05:07:56.308462   246 net.cpp:165] Memory required for data: 97342000
+I0218 05:07:56.308466   246 layer_factory.hpp:77] Creating layer relu4
+I0218 05:07:56.308470   246 net.cpp:100] Creating Layer relu4
+I0218 05:07:56.308473   246 net.cpp:434] relu4 <- conv_blob4
+I0218 05:07:56.308477   246 net.cpp:408] relu4 -> relu_blob4
+I0218 05:07:56.308482   246 net.cpp:150] Setting up relu4
+I0218 05:07:56.308485   246 net.cpp:157] Top shape: 100 28 10 14 (392000)
+I0218 05:07:56.308488   246 net.cpp:165] Memory required for data: 98910000
+I0218 05:07:56.308491   246 layer_factory.hpp:77] Creating layer max_pool2
+I0218 05:07:56.308497   246 net.cpp:100] Creating Layer max_pool2
+I0218 05:07:56.308501   246 net.cpp:434] max_pool2 <- relu_blob4
+I0218 05:07:56.308504   246 net.cpp:408] max_pool2 -> max_pool_blob2
+I0218 05:07:56.308509   246 net.cpp:150] Setting up max_pool2
+I0218 05:07:56.308514   246 net.cpp:157] Top shape: 100 28 5 7 (98000)
+I0218 05:07:56.308518   246 net.cpp:165] Memory required for data: 99302000
+I0218 05:07:56.308521   246 layer_factory.hpp:77] Creating layer fc1
+I0218 05:07:56.308526   246 net.cpp:100] Creating Layer fc1
+I0218 05:07:56.308528   246 net.cpp:434] fc1 <- max_pool_blob2
+I0218 05:07:56.308532   246 net.cpp:408] fc1 -> fc_blob1
+I0218 05:07:56.310106   246 net.cpp:150] Setting up fc1
+I0218 05:07:56.310114   246 net.cpp:157] Top shape: 100 256 (25600)
+I0218 05:07:56.310117   246 net.cpp:165] Memory required for data: 99404400
+I0218 05:07:56.310137   246 layer_factory.hpp:77] Creating layer relu5
+I0218 05:07:56.310143   246 net.cpp:100] Creating Layer relu5
+I0218 05:07:56.310148   246 net.cpp:434] relu5 <- fc_blob1
+I0218 05:07:56.310153   246 net.cpp:408] relu5 -> relu_blob5
+I0218 05:07:56.310159   246 net.cpp:150] Setting up relu5
+I0218 05:07:56.310163   246 net.cpp:157] Top shape: 100 256 (25600)
+I0218 05:07:56.310174   246 net.cpp:165] Memory required for data: 99506800
+I0218 05:07:56.310178   246 layer_factory.hpp:77] Creating layer fc2
+I0218 05:07:56.310182   246 net.cpp:100] Creating Layer fc2
+I0218 05:07:56.310187   246 net.cpp:434] fc2 <- relu_blob5
+I0218 05:07:56.310191   246 net.cpp:408] fc2 -> fc_blob2
+I0218 05:07:56.310329   246 net.cpp:150] Setting up fc2
+I0218 05:07:56.310338   246 net.cpp:157] Top shape: 100 84 (8400)
+I0218 05:07:56.310341   246 net.cpp:165] Memory required for data: 99540400
+I0218 05:07:56.310345   246 layer_factory.hpp:77] Creating layer relu6
+I0218 05:07:56.310350   246 net.cpp:100] Creating Layer relu6
+I0218 05:07:56.310354   246 net.cpp:434] relu6 <- fc_blob2
+I0218 05:07:56.310358   246 net.cpp:408] relu6 -> relu_blob6
+I0218 05:07:56.310362   246 net.cpp:150] Setting up relu6
+I0218 05:07:56.310365   246 net.cpp:157] Top shape: 100 84 (8400)
+I0218 05:07:56.310369   246 net.cpp:165] Memory required for data: 99574000
+I0218 05:07:56.310371   246 layer_factory.hpp:77] Creating layer fc3
+I0218 05:07:56.310377   246 net.cpp:100] Creating Layer fc3
+I0218 05:07:56.310380   246 net.cpp:434] fc3 <- relu_blob6
+I0218 05:07:56.310384   246 net.cpp:408] fc3 -> fc_blob3
+I0218 05:07:56.310395   246 net.cpp:150] Setting up fc3
+I0218 05:07:56.310398   246 net.cpp:157] Top shape: 100 2 (200)
+I0218 05:07:56.310401   246 net.cpp:165] Memory required for data: 99574800
+I0218 05:07:56.310405   246 layer_factory.hpp:77] Creating layer fc_blob3_fc3_0_split
+I0218 05:07:56.310411   246 net.cpp:100] Creating Layer fc_blob3_fc3_0_split
+I0218 05:07:56.310415   246 net.cpp:434] fc_blob3_fc3_0_split <- fc_blob3
+I0218 05:07:56.310420   246 net.cpp:408] fc_blob3_fc3_0_split -> fc_blob3_fc3_0_split_0
+I0218 05:07:56.310423   246 net.cpp:408] fc_blob3_fc3_0_split -> fc_blob3_fc3_0_split_1
+I0218 05:07:56.310431   246 net.cpp:150] Setting up fc_blob3_fc3_0_split
+I0218 05:07:56.310434   246 net.cpp:157] Top shape: 100 2 (200)
+I0218 05:07:56.310438   246 net.cpp:157] Top shape: 100 2 (200)
+I0218 05:07:56.310441   246 net.cpp:165] Memory required for data: 99576400
+I0218 05:07:56.310443   246 layer_factory.hpp:77] Creating layer accuracy
+I0218 05:07:56.310448   246 net.cpp:100] Creating Layer accuracy
+I0218 05:07:56.310451   246 net.cpp:434] accuracy <- fc_blob3_fc3_0_split_0
+I0218 05:07:56.310456   246 net.cpp:434] accuracy <- label_nexpa_1_split_0
+I0218 05:07:56.310459   246 net.cpp:408] accuracy -> accuracy
+I0218 05:07:56.310464   246 net.cpp:150] Setting up accuracy
+I0218 05:07:56.310468   246 net.cpp:157] Top shape: (1)
+I0218 05:07:56.310472   246 net.cpp:165] Memory required for data: 99576404
+I0218 05:07:56.310474   246 layer_factory.hpp:77] Creating layer loss
+I0218 05:07:56.310480   246 net.cpp:100] Creating Layer loss
+I0218 05:07:56.310483   246 net.cpp:434] loss <- fc_blob3_fc3_0_split_1
+I0218 05:07:56.310487   246 net.cpp:434] loss <- label_nexpa_1_split_1
+I0218 05:07:56.310492   246 net.cpp:408] loss -> loss
+I0218 05:07:56.310497   246 layer_factory.hpp:77] Creating layer loss
+I0218 05:07:56.310506   246 net.cpp:150] Setting up loss
+I0218 05:07:56.310510   246 net.cpp:157] Top shape: (1)
+I0218 05:07:56.310513   246 net.cpp:160]     with loss weight 1
+I0218 05:07:56.310520   246 net.cpp:165] Memory required for data: 99576408
+I0218 05:07:56.310523   246 net.cpp:226] loss needs backward computation.
+I0218 05:07:56.310526   246 net.cpp:228] accuracy does not need backward computation.
+I0218 05:07:56.310529   246 net.cpp:226] fc_blob3_fc3_0_split needs backward computation.
+I0218 05:07:56.310533   246 net.cpp:226] fc3 needs backward computation.
+I0218 05:07:56.310535   246 net.cpp:226] relu6 needs backward computation.
+I0218 05:07:56.310539   246 net.cpp:226] fc2 needs backward computation.
+I0218 05:07:56.310541   246 net.cpp:226] relu5 needs backward computation.
+I0218 05:07:56.310544   246 net.cpp:226] fc1 needs backward computation.
+I0218 05:07:56.310547   246 net.cpp:226] max_pool2 needs backward computation.
+I0218 05:07:56.310550   246 net.cpp:226] relu4 needs backward computation.
+I0218 05:07:56.310552   246 net.cpp:226] conv4 needs backward computation.
+I0218 05:07:56.310562   246 net.cpp:226] relu3 needs backward computation.
+I0218 05:07:56.310566   246 net.cpp:226] conv3 needs backward computation.
+I0218 05:07:56.310570   246 net.cpp:226] max_pool1 needs backward computation.
+I0218 05:07:56.310572   246 net.cpp:226] relu2 needs backward computation.
+I0218 05:07:56.310575   246 net.cpp:226] conv2 needs backward computation.
+I0218 05:07:56.310578   246 net.cpp:226] relu1 needs backward computation.
+I0218 05:07:56.310581   246 net.cpp:226] conv1 needs backward computation.
+I0218 05:07:56.310585   246 net.cpp:228] label_nexpa_1_split does not need backward computation.
+I0218 05:07:56.310590   246 net.cpp:228] nexpa does not need backward computation.
+I0218 05:07:56.310592   246 net.cpp:270] This network produces output accuracy
+I0218 05:07:56.310595   246 net.cpp:270] This network produces output loss
+I0218 05:07:56.310607   246 net.cpp:283] Network initialization done.
+I0218 05:07:56.310653   246 solver.cpp:60] Solver scaffolding done.
+I0218 05:07:56.310684   246 caffe.cpp:155] Finetuning from /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200217_iter_2500.caffemodel
+I0218 05:07:56.315254   246 caffe.cpp:251] Starting Optimization
+I0218 05:07:56.315285   246 solver.cpp:279] Solving LeNet32x40_3
+I0218 05:07:56.315289   246 solver.cpp:280] Learning Rate Policy: inv
+I0218 05:07:56.315784   246 solver.cpp:337] Iteration 0, Testing net (#0)
+I0218 05:08:33.125232   246 solver.cpp:404]     Test net output #0: accuracy = 0.9078
+I0218 05:08:33.125293   246 solver.cpp:404]     Test net output #1: loss = 0.311949 (* 1 = 0.311949 loss)
+I0218 05:08:33.780294   246 solver.cpp:228] Iteration 0, loss = 0.352337
+I0218 05:08:33.780339   246 solver.cpp:244]     Train net output #0: loss = 0.352337 (* 1 = 0.352337 loss)
+I0218 05:08:33.780350   246 sgd_solver.cpp:106] Iteration 0, lr = 0.01
+I0218 05:09:35.749073   246 solver.cpp:228] Iteration 100, loss = 0.105541
+I0218 05:09:35.749258   246 solver.cpp:244]     Train net output #0: loss = 0.105541 (* 1 = 0.105541 loss)
+I0218 05:09:35.749267   246 sgd_solver.cpp:106] Iteration 100, lr = 0.00992565
+I0218 05:10:38.001816   246 solver.cpp:228] Iteration 200, loss = 0.125138
+I0218 05:10:38.001983   246 solver.cpp:244]     Train net output #0: loss = 0.125138 (* 1 = 0.125138 loss)
+I0218 05:10:38.001992   246 sgd_solver.cpp:106] Iteration 200, lr = 0.00985258
+I0218 05:11:40.273931   246 solver.cpp:228] Iteration 300, loss = 0.0326149
+I0218 05:11:40.274099   246 solver.cpp:244]     Train net output #0: loss = 0.032615 (* 1 = 0.032615 loss)
+I0218 05:11:40.274108   246 sgd_solver.cpp:106] Iteration 300, lr = 0.00978075
+I0218 05:12:42.570011   246 solver.cpp:228] Iteration 400, loss = 0.0849605
+I0218 05:12:42.570176   246 solver.cpp:244]     Train net output #0: loss = 0.0849605 (* 1 = 0.0849605 loss)
+I0218 05:12:42.570186   246 sgd_solver.cpp:106] Iteration 400, lr = 0.00971013
+I0218 05:13:44.225185   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_500.caffemodel
+I0218 05:13:44.230232   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_500.solverstate
+I0218 05:13:44.232288   246 solver.cpp:337] Iteration 500, Testing net (#0)
+I0218 05:14:21.009408   246 solver.cpp:404]     Test net output #0: accuracy = 0.9763
+I0218 05:14:21.009589   246 solver.cpp:404]     Test net output #1: loss = 0.0725958 (* 1 = 0.0725958 loss)
+I0218 05:14:21.627588   246 solver.cpp:228] Iteration 500, loss = 0.117911
+I0218 05:14:21.627632   246 solver.cpp:244]     Train net output #0: loss = 0.117911 (* 1 = 0.117911 loss)
+I0218 05:14:21.627640   246 sgd_solver.cpp:106] Iteration 500, lr = 0.00964069
+I0218 05:15:23.706105   246 solver.cpp:228] Iteration 600, loss = 0.035981
+I0218 05:15:23.706197   246 solver.cpp:244]     Train net output #0: loss = 0.0359811 (* 1 = 0.0359811 loss)
+I0218 05:15:23.706205   246 sgd_solver.cpp:106] Iteration 600, lr = 0.0095724
+I0218 05:16:25.707696   246 solver.cpp:228] Iteration 700, loss = 0.155664
+I0218 05:16:25.707873   246 solver.cpp:244]     Train net output #0: loss = 0.155664 (* 1 = 0.155664 loss)
+I0218 05:16:25.707882   246 sgd_solver.cpp:106] Iteration 700, lr = 0.00950522
+I0218 05:17:27.716194   246 solver.cpp:228] Iteration 800, loss = 0.181284
+I0218 05:17:27.716261   246 solver.cpp:244]     Train net output #0: loss = 0.181284 (* 1 = 0.181284 loss)
+I0218 05:17:27.716270   246 sgd_solver.cpp:106] Iteration 800, lr = 0.00943913
+I0218 05:18:29.751799   246 solver.cpp:228] Iteration 900, loss = 0.0158491
+I0218 05:18:29.751864   246 solver.cpp:244]     Train net output #0: loss = 0.0158491 (* 1 = 0.0158491 loss)
+I0218 05:18:29.751871   246 sgd_solver.cpp:106] Iteration 900, lr = 0.00937411
+I0218 05:19:31.247632   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_1000.caffemodel
+I0218 05:19:31.252689   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_1000.solverstate
+I0218 05:19:31.254813   246 solver.cpp:337] Iteration 1000, Testing net (#0)
+I0218 05:20:07.978973   246 solver.cpp:404]     Test net output #0: accuracy = 0.976
+I0218 05:20:07.979140   246 solver.cpp:404]     Test net output #1: loss = 0.0641857 (* 1 = 0.0641857 loss)
+I0218 05:20:08.598387   246 solver.cpp:228] Iteration 1000, loss = 0.0238903
+I0218 05:20:08.598431   246 solver.cpp:244]     Train net output #0: loss = 0.0238904 (* 1 = 0.0238904 loss)
+I0218 05:20:08.598438   246 sgd_solver.cpp:106] Iteration 1000, lr = 0.00931012
+I0218 05:21:10.748698   246 solver.cpp:228] Iteration 1100, loss = 0.0088492
+I0218 05:21:10.748864   246 solver.cpp:244]     Train net output #0: loss = 0.00884925 (* 1 = 0.00884925 loss)
+I0218 05:21:10.748873   246 sgd_solver.cpp:106] Iteration 1100, lr = 0.00924715
+I0218 05:22:13.013206   246 solver.cpp:228] Iteration 1200, loss = 0.0378156
+I0218 05:22:13.013276   246 solver.cpp:244]     Train net output #0: loss = 0.0378156 (* 1 = 0.0378156 loss)
+I0218 05:22:13.013285   246 sgd_solver.cpp:106] Iteration 1200, lr = 0.00918515
+I0218 05:23:15.498464   246 solver.cpp:228] Iteration 1300, loss = 0.0183766
+I0218 05:23:15.498536   246 solver.cpp:244]     Train net output #0: loss = 0.0183767 (* 1 = 0.0183767 loss)
+I0218 05:23:15.498543   246 sgd_solver.cpp:106] Iteration 1300, lr = 0.00912412
+I0218 05:24:17.747735   246 solver.cpp:228] Iteration 1400, loss = 0.048371
+I0218 05:24:17.747802   246 solver.cpp:244]     Train net output #0: loss = 0.0483711 (* 1 = 0.0483711 loss)
+I0218 05:24:17.747808   246 sgd_solver.cpp:106] Iteration 1400, lr = 0.00906403
+I0218 05:25:19.348660   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_1500.caffemodel
+I0218 05:25:19.353638   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_1500.solverstate
+I0218 05:25:19.355788   246 solver.cpp:337] Iteration 1500, Testing net (#0)
+I0218 05:25:56.053891   246 solver.cpp:404]     Test net output #0: accuracy = 0.9824
+I0218 05:25:56.054057   246 solver.cpp:404]     Test net output #1: loss = 0.0532374 (* 1 = 0.0532374 loss)
+I0218 05:25:56.673831   246 solver.cpp:228] Iteration 1500, loss = 0.0811258
+I0218 05:25:56.673861   246 solver.cpp:244]     Train net output #0: loss = 0.0811258 (* 1 = 0.0811258 loss)
+I0218 05:25:56.673883   246 sgd_solver.cpp:106] Iteration 1500, lr = 0.00900485
+I0218 05:26:58.924655   246 solver.cpp:228] Iteration 1600, loss = 0.0381731
+I0218 05:26:58.924830   246 solver.cpp:244]     Train net output #0: loss = 0.0381731 (* 1 = 0.0381731 loss)
+I0218 05:26:58.924839   246 sgd_solver.cpp:106] Iteration 1600, lr = 0.00894657
+I0218 05:28:00.933601   246 solver.cpp:228] Iteration 1700, loss = 0.0184781
+I0218 05:28:00.933696   246 solver.cpp:244]     Train net output #0: loss = 0.0184782 (* 1 = 0.0184782 loss)
+I0218 05:28:00.933703   246 sgd_solver.cpp:106] Iteration 1700, lr = 0.00888916
+I0218 05:29:03.020593   246 solver.cpp:228] Iteration 1800, loss = 0.0792937
+I0218 05:29:03.020663   246 solver.cpp:244]     Train net output #0: loss = 0.0792937 (* 1 = 0.0792937 loss)
+I0218 05:29:03.020671   246 sgd_solver.cpp:106] Iteration 1800, lr = 0.0088326
+I0218 05:30:05.247299   246 solver.cpp:228] Iteration 1900, loss = 0.0311103
+I0218 05:30:05.247463   246 solver.cpp:244]     Train net output #0: loss = 0.0311104 (* 1 = 0.0311104 loss)
+I0218 05:30:05.247473   246 sgd_solver.cpp:106] Iteration 1900, lr = 0.00877687
+I0218 05:31:06.724851   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_2000.caffemodel
+I0218 05:31:06.729964   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_2000.solverstate
+I0218 05:31:06.732023   246 solver.cpp:337] Iteration 2000, Testing net (#0)
+I0218 05:31:43.381191   246 solver.cpp:404]     Test net output #0: accuracy = 0.9835
+I0218 05:31:43.381350   246 solver.cpp:404]     Test net output #1: loss = 0.0512067 (* 1 = 0.0512067 loss)
+I0218 05:31:44.004081   246 solver.cpp:228] Iteration 2000, loss = 0.0457567
+I0218 05:31:44.004125   246 solver.cpp:244]     Train net output #0: loss = 0.0457568 (* 1 = 0.0457568 loss)
+I0218 05:31:44.004134   246 sgd_solver.cpp:106] Iteration 2000, lr = 0.00872196
+I0218 05:32:46.194715   246 solver.cpp:228] Iteration 2100, loss = 0.00369326
+I0218 05:32:46.194883   246 solver.cpp:244]     Train net output #0: loss = 0.00369335 (* 1 = 0.00369335 loss)
+I0218 05:32:46.194892   246 sgd_solver.cpp:106] Iteration 2100, lr = 0.00866784
+I0218 05:33:48.267783   246 solver.cpp:228] Iteration 2200, loss = 0.0281748
+I0218 05:33:48.267949   246 solver.cpp:244]     Train net output #0: loss = 0.0281748 (* 1 = 0.0281748 loss)
+I0218 05:33:48.267958   246 sgd_solver.cpp:106] Iteration 2200, lr = 0.0086145
+I0218 05:34:50.549937   246 solver.cpp:228] Iteration 2300, loss = 0.0640677
+I0218 05:34:50.550125   246 solver.cpp:244]     Train net output #0: loss = 0.0640678 (* 1 = 0.0640678 loss)
+I0218 05:34:50.550134   246 sgd_solver.cpp:106] Iteration 2300, lr = 0.00856192
+I0218 05:35:52.792454   246 solver.cpp:228] Iteration 2400, loss = 0.061945
+I0218 05:35:52.792520   246 solver.cpp:244]     Train net output #0: loss = 0.0619451 (* 1 = 0.0619451 loss)
+I0218 05:35:52.792528   246 sgd_solver.cpp:106] Iteration 2400, lr = 0.00851008
+I0218 05:36:54.165727   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_2500.caffemodel
+I0218 05:36:54.170760   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_2500.solverstate
+I0218 05:36:54.172922   246 solver.cpp:337] Iteration 2500, Testing net (#0)
+I0218 05:37:30.814801   246 solver.cpp:404]     Test net output #0: accuracy = 0.9798
+I0218 05:37:30.814967   246 solver.cpp:404]     Test net output #1: loss = 0.06074 (* 1 = 0.06074 loss)
+I0218 05:37:31.432842   246 solver.cpp:228] Iteration 2500, loss = 0.0509893
+I0218 05:37:31.432888   246 solver.cpp:244]     Train net output #0: loss = 0.0509894 (* 1 = 0.0509894 loss)
+I0218 05:37:31.432895   246 sgd_solver.cpp:106] Iteration 2500, lr = 0.00845897
+I0218 05:38:33.829736   246 solver.cpp:228] Iteration 2600, loss = 0.0132507
+I0218 05:38:33.829802   246 solver.cpp:244]     Train net output #0: loss = 0.0132508 (* 1 = 0.0132508 loss)
+I0218 05:38:33.829810   246 sgd_solver.cpp:106] Iteration 2600, lr = 0.00840857
+I0218 05:39:36.133123   246 solver.cpp:228] Iteration 2700, loss = 0.062994
+I0218 05:39:36.133302   246 solver.cpp:244]     Train net output #0: loss = 0.062994 (* 1 = 0.062994 loss)
+I0218 05:39:36.133312   246 sgd_solver.cpp:106] Iteration 2700, lr = 0.00835886
+I0218 05:40:38.326099   246 solver.cpp:228] Iteration 2800, loss = 0.121082
+I0218 05:40:38.326192   246 solver.cpp:244]     Train net output #0: loss = 0.121082 (* 1 = 0.121082 loss)
+I0218 05:40:38.326200   246 sgd_solver.cpp:106] Iteration 2800, lr = 0.00830984
+I0218 05:41:40.437834   246 solver.cpp:228] Iteration 2900, loss = 0.00866435
+I0218 05:41:40.437903   246 solver.cpp:244]     Train net output #0: loss = 0.00866443 (* 1 = 0.00866443 loss)
+I0218 05:41:40.437911   246 sgd_solver.cpp:106] Iteration 2900, lr = 0.00826148
+I0218 05:42:41.975195   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_3000.caffemodel
+I0218 05:42:41.980243   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_3000.solverstate
+I0218 05:42:41.982435   246 solver.cpp:337] Iteration 3000, Testing net (#0)
+I0218 05:43:18.710736   246 solver.cpp:404]     Test net output #0: accuracy = 0.9856
+I0218 05:43:18.710902   246 solver.cpp:404]     Test net output #1: loss = 0.0434599 (* 1 = 0.0434599 loss)
+I0218 05:43:19.328099   246 solver.cpp:228] Iteration 3000, loss = 0.0249232
+I0218 05:43:19.328142   246 solver.cpp:244]     Train net output #0: loss = 0.0249232 (* 1 = 0.0249232 loss)
+I0218 05:43:19.328151   246 sgd_solver.cpp:106] Iteration 3000, lr = 0.00821377
+I0218 05:44:21.638788   246 solver.cpp:228] Iteration 3100, loss = 0.0234341
+I0218 05:44:21.638957   246 solver.cpp:244]     Train net output #0: loss = 0.0234341 (* 1 = 0.0234341 loss)
+I0218 05:44:21.638967   246 sgd_solver.cpp:106] Iteration 3100, lr = 0.0081667
+I0218 05:45:23.936929   246 solver.cpp:228] Iteration 3200, loss = 0.0188116
+I0218 05:45:23.936996   246 solver.cpp:244]     Train net output #0: loss = 0.0188117 (* 1 = 0.0188117 loss)
+I0218 05:45:23.937005   246 sgd_solver.cpp:106] Iteration 3200, lr = 0.00812025
+I0218 05:46:26.187114   246 solver.cpp:228] Iteration 3300, loss = 0.0761112
+I0218 05:46:26.187177   246 solver.cpp:244]     Train net output #0: loss = 0.0761112 (* 1 = 0.0761112 loss)
+I0218 05:46:26.187186   246 sgd_solver.cpp:106] Iteration 3300, lr = 0.00807442
+I0218 05:47:28.418757   246 solver.cpp:228] Iteration 3400, loss = 0.0375145
+I0218 05:47:28.418821   246 solver.cpp:244]     Train net output #0: loss = 0.0375145 (* 1 = 0.0375145 loss)
+I0218 05:47:28.418829   246 sgd_solver.cpp:106] Iteration 3400, lr = 0.00802918
+I0218 05:48:29.832237   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_3500.caffemodel
+I0218 05:48:29.837150   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_3500.solverstate
+I0218 05:48:29.839217   246 solver.cpp:337] Iteration 3500, Testing net (#0)
+I0218 05:49:06.700224   246 solver.cpp:404]     Test net output #0: accuracy = 0.9843
+I0218 05:49:06.700388   246 solver.cpp:404]     Test net output #1: loss = 0.0445674 (* 1 = 0.0445674 loss)
+I0218 05:49:07.318578   246 solver.cpp:228] Iteration 3500, loss = 0.0108849
+I0218 05:49:07.318624   246 solver.cpp:244]     Train net output #0: loss = 0.010885 (* 1 = 0.010885 loss)
+I0218 05:49:07.318632   246 sgd_solver.cpp:106] Iteration 3500, lr = 0.00798454
+I0218 05:50:09.937237   246 solver.cpp:228] Iteration 3600, loss = 0.0161158
+I0218 05:50:09.937300   246 solver.cpp:244]     Train net output #0: loss = 0.0161159 (* 1 = 0.0161159 loss)
+I0218 05:50:09.937309   246 sgd_solver.cpp:106] Iteration 3600, lr = 0.00794046
+I0218 05:51:12.223237   246 solver.cpp:228] Iteration 3700, loss = 0.0293185
+I0218 05:51:12.223300   246 solver.cpp:244]     Train net output #0: loss = 0.0293185 (* 1 = 0.0293185 loss)
+I0218 05:51:12.223309   246 sgd_solver.cpp:106] Iteration 3700, lr = 0.00789695
+I0218 05:52:14.623250   246 solver.cpp:228] Iteration 3800, loss = 0.00235399
+I0218 05:52:14.623312   246 solver.cpp:244]     Train net output #0: loss = 0.00235405 (* 1 = 0.00235405 loss)
+I0218 05:52:14.623319   246 sgd_solver.cpp:106] Iteration 3800, lr = 0.007854
+I0218 05:53:17.078900   246 solver.cpp:228] Iteration 3900, loss = 0.0256336
+I0218 05:53:17.079092   246 solver.cpp:244]     Train net output #0: loss = 0.0256337 (* 1 = 0.0256337 loss)
+I0218 05:53:17.079102   246 sgd_solver.cpp:106] Iteration 3900, lr = 0.00781158
+I0218 05:54:18.920027   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_4000.caffemodel
+I0218 05:54:18.925161   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_4000.solverstate
+I0218 05:54:18.927332   246 solver.cpp:337] Iteration 4000, Testing net (#0)
+I0218 05:54:55.836102   246 solver.cpp:404]     Test net output #0: accuracy = 0.9878
+I0218 05:54:55.836166   246 solver.cpp:404]     Test net output #1: loss = 0.0398363 (* 1 = 0.0398363 loss)
+I0218 05:54:56.455044   246 solver.cpp:228] Iteration 4000, loss = 0.0213248
+I0218 05:54:56.455086   246 solver.cpp:244]     Train net output #0: loss = 0.0213248 (* 1 = 0.0213248 loss)
+I0218 05:54:56.455094   246 sgd_solver.cpp:106] Iteration 4000, lr = 0.0077697
+I0218 05:55:58.626663   246 solver.cpp:228] Iteration 4100, loss = 0.0325731
+I0218 05:55:58.626729   246 solver.cpp:244]     Train net output #0: loss = 0.0325732 (* 1 = 0.0325732 loss)
+I0218 05:55:58.626736   246 sgd_solver.cpp:106] Iteration 4100, lr = 0.00772833
+I0218 05:57:00.668016   246 solver.cpp:228] Iteration 4200, loss = 0.00167882
+I0218 05:57:00.668082   246 solver.cpp:244]     Train net output #0: loss = 0.0016789 (* 1 = 0.0016789 loss)
+I0218 05:57:00.668090   246 sgd_solver.cpp:106] Iteration 4200, lr = 0.00768748
+I0218 05:58:03.048507   246 solver.cpp:228] Iteration 4300, loss = 0.0303812
+I0218 05:58:03.048574   246 solver.cpp:244]     Train net output #0: loss = 0.0303813 (* 1 = 0.0303813 loss)
+I0218 05:58:03.048583   246 sgd_solver.cpp:106] Iteration 4300, lr = 0.00764712
+I0218 05:59:05.338040   246 solver.cpp:228] Iteration 4400, loss = 0.0432247
+I0218 05:59:05.338222   246 solver.cpp:244]     Train net output #0: loss = 0.0432248 (* 1 = 0.0432248 loss)
+I0218 05:59:05.338229   246 sgd_solver.cpp:106] Iteration 4400, lr = 0.00760726
+I0218 06:00:07.031052   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_4500.caffemodel
+I0218 06:00:07.036104   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_4500.solverstate
+I0218 06:00:07.038254   246 solver.cpp:337] Iteration 4500, Testing net (#0)
+I0218 06:00:43.894351   246 solver.cpp:404]     Test net output #0: accuracy = 0.9869
+I0218 06:00:43.894553   246 solver.cpp:404]     Test net output #1: loss = 0.0418505 (* 1 = 0.0418505 loss)
+I0218 06:00:44.513769   246 solver.cpp:228] Iteration 4500, loss = 0.00444697
+I0218 06:00:44.513813   246 solver.cpp:244]     Train net output #0: loss = 0.00444701 (* 1 = 0.00444701 loss)
+I0218 06:00:44.513823   246 sgd_solver.cpp:106] Iteration 4500, lr = 0.00756788
+I0218 06:01:46.530939   246 solver.cpp:228] Iteration 4600, loss = 0.0102328
+I0218 06:01:46.531005   246 solver.cpp:244]     Train net output #0: loss = 0.0102328 (* 1 = 0.0102328 loss)
+I0218 06:01:46.531013   246 sgd_solver.cpp:106] Iteration 4600, lr = 0.00752897
+I0218 06:02:48.614162   246 solver.cpp:228] Iteration 4700, loss = 0.00151411
+I0218 06:02:48.614333   246 solver.cpp:244]     Train net output #0: loss = 0.00151415 (* 1 = 0.00151415 loss)
+I0218 06:02:48.614343   246 sgd_solver.cpp:106] Iteration 4700, lr = 0.00749052
+I0218 06:03:50.744583   246 solver.cpp:228] Iteration 4800, loss = 0.00424594
+I0218 06:03:50.744765   246 solver.cpp:244]     Train net output #0: loss = 0.00424599 (* 1 = 0.00424599 loss)
+I0218 06:03:50.744804   246 sgd_solver.cpp:106] Iteration 4800, lr = 0.00745253
+I0218 06:04:52.772703   246 solver.cpp:228] Iteration 4900, loss = 0.00219491
+I0218 06:04:52.772893   246 solver.cpp:244]     Train net output #0: loss = 0.00219495 (* 1 = 0.00219495 loss)
+I0218 06:04:52.772902   246 sgd_solver.cpp:106] Iteration 4900, lr = 0.00741498
+I0218 06:05:54.171183   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_5000.caffemodel
+I0218 06:05:54.176201   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_5000.solverstate
+I0218 06:05:54.178274   246 solver.cpp:337] Iteration 5000, Testing net (#0)
+I0218 06:06:30.991554   246 solver.cpp:404]     Test net output #0: accuracy = 0.9892
+I0218 06:06:30.991708   246 solver.cpp:404]     Test net output #1: loss = 0.034106 (* 1 = 0.034106 loss)
+I0218 06:06:31.610996   246 solver.cpp:228] Iteration 5000, loss = 0.00575095
+I0218 06:06:31.611039   246 solver.cpp:244]     Train net output #0: loss = 0.00575099 (* 1 = 0.00575099 loss)
+I0218 06:06:31.611047   246 sgd_solver.cpp:106] Iteration 5000, lr = 0.00737788
+I0218 06:07:33.594367   246 solver.cpp:228] Iteration 5100, loss = 0.00879295
+I0218 06:07:33.594429   246 solver.cpp:244]     Train net output #0: loss = 0.00879298 (* 1 = 0.00879298 loss)
+I0218 06:07:33.594436   246 sgd_solver.cpp:106] Iteration 5100, lr = 0.0073412
+I0218 06:08:35.613893   246 solver.cpp:228] Iteration 5200, loss = 0.00698232
+I0218 06:08:35.613957   246 solver.cpp:244]     Train net output #0: loss = 0.00698235 (* 1 = 0.00698235 loss)
+I0218 06:08:35.613965   246 sgd_solver.cpp:106] Iteration 5200, lr = 0.00730495
+I0218 06:09:37.963807   246 solver.cpp:228] Iteration 5300, loss = 0.0275615
+I0218 06:09:37.963963   246 solver.cpp:244]     Train net output #0: loss = 0.0275615 (* 1 = 0.0275615 loss)
+I0218 06:09:37.963986   246 sgd_solver.cpp:106] Iteration 5300, lr = 0.00726911
+I0218 06:10:40.299990   246 solver.cpp:228] Iteration 5400, loss = 0.00371515
+I0218 06:10:40.300055   246 solver.cpp:244]     Train net output #0: loss = 0.0037152 (* 1 = 0.0037152 loss)
+I0218 06:10:40.300062   246 sgd_solver.cpp:106] Iteration 5400, lr = 0.00723368
+I0218 06:11:42.055433   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_5500.caffemodel
+I0218 06:11:42.060425   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_5500.solverstate
+I0218 06:11:42.062585   246 solver.cpp:337] Iteration 5500, Testing net (#0)
+I0218 06:12:19.009002   246 solver.cpp:404]     Test net output #0: accuracy = 0.9867
+I0218 06:12:19.009075   246 solver.cpp:404]     Test net output #1: loss = 0.0393473 (* 1 = 0.0393473 loss)
+I0218 06:12:19.627075   246 solver.cpp:228] Iteration 5500, loss = 0.093921
+I0218 06:12:19.627118   246 solver.cpp:244]     Train net output #0: loss = 0.093921 (* 1 = 0.093921 loss)
+I0218 06:12:19.627126   246 sgd_solver.cpp:106] Iteration 5500, lr = 0.00719865
+I0218 06:13:21.655194   246 solver.cpp:228] Iteration 5600, loss = 0.00842684
+I0218 06:13:21.655360   246 solver.cpp:244]     Train net output #0: loss = 0.0084269 (* 1 = 0.0084269 loss)
+I0218 06:13:21.655369   246 sgd_solver.cpp:106] Iteration 5600, lr = 0.00716402
+I0218 06:14:23.961350   246 solver.cpp:228] Iteration 5700, loss = 0.00510691
+I0218 06:14:23.961519   246 solver.cpp:244]     Train net output #0: loss = 0.00510696 (* 1 = 0.00510696 loss)
+I0218 06:14:23.961529   246 sgd_solver.cpp:106] Iteration 5700, lr = 0.00712977
+I0218 06:15:26.243633   246 solver.cpp:228] Iteration 5800, loss = 0.0222047
+I0218 06:15:26.243798   246 solver.cpp:244]     Train net output #0: loss = 0.0222047 (* 1 = 0.0222047 loss)
+I0218 06:15:26.243808   246 sgd_solver.cpp:106] Iteration 5800, lr = 0.0070959
+I0218 06:16:28.452822   246 solver.cpp:228] Iteration 5900, loss = 0.00231594
+I0218 06:16:28.452888   246 solver.cpp:244]     Train net output #0: loss = 0.002316 (* 1 = 0.002316 loss)
+I0218 06:16:28.452895   246 sgd_solver.cpp:106] Iteration 5900, lr = 0.0070624
+I0218 06:17:30.034816   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_6000.caffemodel
+I0218 06:17:30.039813   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_6000.solverstate
+I0218 06:17:30.041970   246 solver.cpp:337] Iteration 6000, Testing net (#0)
+I0218 06:18:06.612597   246 solver.cpp:404]     Test net output #0: accuracy = 0.988
+I0218 06:18:06.612795   246 solver.cpp:404]     Test net output #1: loss = 0.0425357 (* 1 = 0.0425357 loss)
+I0218 06:18:07.230813   246 solver.cpp:228] Iteration 6000, loss = 0.00153641
+I0218 06:18:07.230859   246 solver.cpp:244]     Train net output #0: loss = 0.00153648 (* 1 = 0.00153648 loss)
+I0218 06:18:07.230866   246 sgd_solver.cpp:106] Iteration 6000, lr = 0.00702927
+I0218 06:19:09.633154   246 solver.cpp:228] Iteration 6100, loss = 0.0145369
+I0218 06:19:09.633219   246 solver.cpp:244]     Train net output #0: loss = 0.014537 (* 1 = 0.014537 loss)
+I0218 06:19:09.633227   246 sgd_solver.cpp:106] Iteration 6100, lr = 0.0069965
+I0218 06:20:11.828048   246 solver.cpp:228] Iteration 6200, loss = 0.0640716
+I0218 06:20:11.828116   246 solver.cpp:244]     Train net output #0: loss = 0.0640716 (* 1 = 0.0640716 loss)
+I0218 06:20:11.828124   246 sgd_solver.cpp:106] Iteration 6200, lr = 0.00696408
+I0218 06:21:14.082260   246 solver.cpp:228] Iteration 6300, loss = 0.00511231
+I0218 06:21:14.082325   246 solver.cpp:244]     Train net output #0: loss = 0.00511235 (* 1 = 0.00511235 loss)
+I0218 06:21:14.082334   246 sgd_solver.cpp:106] Iteration 6300, lr = 0.00693201
+I0218 06:22:16.347970   246 solver.cpp:228] Iteration 6400, loss = 0.00471247
+I0218 06:22:16.348033   246 solver.cpp:244]     Train net output #0: loss = 0.00471251 (* 1 = 0.00471251 loss)
+I0218 06:22:16.348040   246 sgd_solver.cpp:106] Iteration 6400, lr = 0.00690029
+I0218 06:23:17.874881   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_6500.caffemodel
+I0218 06:23:17.879989   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_6500.solverstate
+I0218 06:23:17.882139   246 solver.cpp:337] Iteration 6500, Testing net (#0)
+I0218 06:23:54.606626   246 solver.cpp:404]     Test net output #0: accuracy = 0.9866
+I0218 06:23:54.606789   246 solver.cpp:404]     Test net output #1: loss = 0.0443896 (* 1 = 0.0443896 loss)
+I0218 06:23:55.224370   246 solver.cpp:228] Iteration 6500, loss = 0.00734148
+I0218 06:23:55.224412   246 solver.cpp:244]     Train net output #0: loss = 0.00734152 (* 1 = 0.00734152 loss)
+I0218 06:23:55.224421   246 sgd_solver.cpp:106] Iteration 6500, lr = 0.0068689
+I0218 06:24:57.458843   246 solver.cpp:228] Iteration 6600, loss = 0.0200823
+I0218 06:24:57.458909   246 solver.cpp:244]     Train net output #0: loss = 0.0200823 (* 1 = 0.0200823 loss)
+I0218 06:24:57.458916   246 sgd_solver.cpp:106] Iteration 6600, lr = 0.00683784
+I0218 06:25:59.474124   246 solver.cpp:228] Iteration 6700, loss = 0.0110605
+I0218 06:25:59.474292   246 solver.cpp:244]     Train net output #0: loss = 0.0110605 (* 1 = 0.0110605 loss)
+I0218 06:25:59.474303   246 sgd_solver.cpp:106] Iteration 6700, lr = 0.00680711
+I0218 06:27:01.550457   246 solver.cpp:228] Iteration 6800, loss = 0.00517764
+I0218 06:27:01.550623   246 solver.cpp:244]     Train net output #0: loss = 0.00517767 (* 1 = 0.00517767 loss)
+I0218 06:27:01.550632   246 sgd_solver.cpp:106] Iteration 6800, lr = 0.0067767
+I0218 06:28:03.867141   246 solver.cpp:228] Iteration 6900, loss = 0.00652893
+I0218 06:28:03.867311   246 solver.cpp:244]     Train net output #0: loss = 0.00652896 (* 1 = 0.00652896 loss)
+I0218 06:28:03.867319   246 sgd_solver.cpp:106] Iteration 6900, lr = 0.0067466
+I0218 06:29:05.591596   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_7000.caffemodel
+I0218 06:29:05.596617   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_7000.solverstate
+I0218 06:29:05.598781   246 solver.cpp:337] Iteration 7000, Testing net (#0)
+I0218 06:29:42.480370   246 solver.cpp:404]     Test net output #0: accuracy = 0.9902
+I0218 06:29:42.480518   246 solver.cpp:404]     Test net output #1: loss = 0.0317193 (* 1 = 0.0317193 loss)
+I0218 06:29:43.099025   246 solver.cpp:228] Iteration 7000, loss = 0.00310523
+I0218 06:29:43.099068   246 solver.cpp:244]     Train net output #0: loss = 0.00310525 (* 1 = 0.00310525 loss)
+I0218 06:29:43.099076   246 sgd_solver.cpp:106] Iteration 7000, lr = 0.00671681
+I0218 06:30:45.366655   246 solver.cpp:228] Iteration 7100, loss = 0.0234499
+I0218 06:30:45.366856   246 solver.cpp:244]     Train net output #0: loss = 0.0234499 (* 1 = 0.0234499 loss)
+I0218 06:30:45.366865   246 sgd_solver.cpp:106] Iteration 7100, lr = 0.00668733
+I0218 06:31:47.692355   246 solver.cpp:228] Iteration 7200, loss = 0.00132193
+I0218 06:31:47.692525   246 solver.cpp:244]     Train net output #0: loss = 0.00132194 (* 1 = 0.00132194 loss)
+I0218 06:31:47.692534   246 sgd_solver.cpp:106] Iteration 7200, lr = 0.00665815
+I0218 06:32:49.865840   246 solver.cpp:228] Iteration 7300, loss = 0.00828197
+I0218 06:32:49.866021   246 solver.cpp:244]     Train net output #0: loss = 0.00828197 (* 1 = 0.00828197 loss)
+I0218 06:32:49.866032   246 sgd_solver.cpp:106] Iteration 7300, lr = 0.00662927
+I0218 06:33:51.957093   246 solver.cpp:228] Iteration 7400, loss = 0.0141965
+I0218 06:33:51.957159   246 solver.cpp:244]     Train net output #0: loss = 0.0141965 (* 1 = 0.0141965 loss)
+I0218 06:33:51.957166   246 sgd_solver.cpp:106] Iteration 7400, lr = 0.00660067
+I0218 06:34:53.527073   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_7500.caffemodel
+I0218 06:34:53.532122   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_7500.solverstate
+I0218 06:34:53.534268   246 solver.cpp:337] Iteration 7500, Testing net (#0)
+I0218 06:35:30.388999   246 solver.cpp:404]     Test net output #0: accuracy = 0.9879
+I0218 06:35:30.389163   246 solver.cpp:404]     Test net output #1: loss = 0.0408835 (* 1 = 0.0408835 loss)
+I0218 06:35:31.006430   246 solver.cpp:228] Iteration 7500, loss = 0.00085344
+I0218 06:35:31.006477   246 solver.cpp:244]     Train net output #0: loss = 0.00085344 (* 1 = 0.00085344 loss)
+I0218 06:35:31.006485   246 sgd_solver.cpp:106] Iteration 7500, lr = 0.00657236
+I0218 06:36:33.106493   246 solver.cpp:228] Iteration 7600, loss = 0.00108535
+I0218 06:36:33.106667   246 solver.cpp:244]     Train net output #0: loss = 0.00108535 (* 1 = 0.00108535 loss)
+I0218 06:36:33.106675   246 sgd_solver.cpp:106] Iteration 7600, lr = 0.00654433
+I0218 06:37:35.473913   246 solver.cpp:228] Iteration 7700, loss = 0.0423232
+I0218 06:37:35.473978   246 solver.cpp:244]     Train net output #0: loss = 0.0423232 (* 1 = 0.0423232 loss)
+I0218 06:37:35.473986   246 sgd_solver.cpp:106] Iteration 7700, lr = 0.00651658
+I0218 06:38:37.823186   246 solver.cpp:228] Iteration 7800, loss = 0.021288
+I0218 06:38:37.823371   246 solver.cpp:244]     Train net output #0: loss = 0.021288 (* 1 = 0.021288 loss)
+I0218 06:38:37.823380   246 sgd_solver.cpp:106] Iteration 7800, lr = 0.00648911
+I0218 06:39:40.279034   246 solver.cpp:228] Iteration 7900, loss = 0.00706502
+I0218 06:39:40.279127   246 solver.cpp:244]     Train net output #0: loss = 0.00706501 (* 1 = 0.00706501 loss)
+I0218 06:39:40.279135   246 sgd_solver.cpp:106] Iteration 7900, lr = 0.0064619
+I0218 06:40:42.100509   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_8000.caffemodel
+I0218 06:40:42.105680   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_8000.solverstate
+I0218 06:40:42.107820   246 solver.cpp:337] Iteration 8000, Testing net (#0)
+I0218 06:41:19.025558   246 solver.cpp:404]     Test net output #0: accuracy = 0.9883
+I0218 06:41:19.025611   246 solver.cpp:404]     Test net output #1: loss = 0.0422587 (* 1 = 0.0422587 loss)
+I0218 06:41:19.643306   246 solver.cpp:228] Iteration 8000, loss = 0.00791456
+I0218 06:41:19.643350   246 solver.cpp:244]     Train net output #0: loss = 0.00791456 (* 1 = 0.00791456 loss)
+I0218 06:41:19.643357   246 sgd_solver.cpp:106] Iteration 8000, lr = 0.00643496
+I0218 06:42:21.986876   246 solver.cpp:228] Iteration 8100, loss = 0.018536
+I0218 06:42:21.987071   246 solver.cpp:244]     Train net output #0: loss = 0.018536 (* 1 = 0.018536 loss)
+I0218 06:42:21.987080   246 sgd_solver.cpp:106] Iteration 8100, lr = 0.00640827
+I0218 06:43:24.205124   246 solver.cpp:228] Iteration 8200, loss = 0.00564614
+I0218 06:43:24.205296   246 solver.cpp:244]     Train net output #0: loss = 0.00564615 (* 1 = 0.00564615 loss)
+I0218 06:43:24.205305   246 sgd_solver.cpp:106] Iteration 8200, lr = 0.00638185
+I0218 06:44:26.378958   246 solver.cpp:228] Iteration 8300, loss = 0.015254
+I0218 06:44:26.379024   246 solver.cpp:244]     Train net output #0: loss = 0.0152541 (* 1 = 0.0152541 loss)
+I0218 06:44:26.379031   246 sgd_solver.cpp:106] Iteration 8300, lr = 0.00635567
+I0218 06:45:28.564671   246 solver.cpp:228] Iteration 8400, loss = 0.000377764
+I0218 06:45:28.564735   246 solver.cpp:244]     Train net output #0: loss = 0.000377787 (* 1 = 0.000377787 loss)
+I0218 06:45:28.564743   246 sgd_solver.cpp:106] Iteration 8400, lr = 0.00632975
+I0218 06:46:30.310734   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_8500.caffemodel
+I0218 06:46:30.315800   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_8500.solverstate
+I0218 06:46:30.317939   246 solver.cpp:337] Iteration 8500, Testing net (#0)
+I0218 06:47:06.992970   246 solver.cpp:404]     Test net output #0: accuracy = 0.9902
+I0218 06:47:06.993136   246 solver.cpp:404]     Test net output #1: loss = 0.0321624 (* 1 = 0.0321624 loss)
+I0218 06:47:07.611222   246 solver.cpp:228] Iteration 8500, loss = 0.0153277
+I0218 06:47:07.611265   246 solver.cpp:244]     Train net output #0: loss = 0.0153277 (* 1 = 0.0153277 loss)
+I0218 06:47:07.611272   246 sgd_solver.cpp:106] Iteration 8500, lr = 0.00630407
+I0218 06:48:10.006819   246 solver.cpp:228] Iteration 8600, loss = 0.0124392
+I0218 06:48:10.007011   246 solver.cpp:244]     Train net output #0: loss = 0.0124393 (* 1 = 0.0124393 loss)
+I0218 06:48:10.007021   246 sgd_solver.cpp:106] Iteration 8600, lr = 0.00627864
+I0218 06:49:12.302927   246 solver.cpp:228] Iteration 8700, loss = 0.0145851
+I0218 06:49:12.302991   246 solver.cpp:244]     Train net output #0: loss = 0.0145852 (* 1 = 0.0145852 loss)
+I0218 06:49:12.302999   246 sgd_solver.cpp:106] Iteration 8700, lr = 0.00625344
+I0218 06:50:14.503626   246 solver.cpp:228] Iteration 8800, loss = 0.00781407
+I0218 06:50:14.503693   246 solver.cpp:244]     Train net output #0: loss = 0.00781413 (* 1 = 0.00781413 loss)
+I0218 06:50:14.503701   246 sgd_solver.cpp:106] Iteration 8800, lr = 0.00622847
+I0218 06:51:16.764745   246 solver.cpp:228] Iteration 8900, loss = 0.00126398
+I0218 06:51:16.764928   246 solver.cpp:244]     Train net output #0: loss = 0.00126403 (* 1 = 0.00126403 loss)
+I0218 06:51:16.764937   246 sgd_solver.cpp:106] Iteration 8900, lr = 0.00620374
+I0218 06:52:18.602926   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_9000.caffemodel
+I0218 06:52:18.608021   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_9000.solverstate
+I0218 06:52:18.610136   246 solver.cpp:337] Iteration 9000, Testing net (#0)
+I0218 06:52:55.250823   246 solver.cpp:404]     Test net output #0: accuracy = 0.989
+I0218 06:52:55.250890   246 solver.cpp:404]     Test net output #1: loss = 0.035418 (* 1 = 0.035418 loss)
+I0218 06:52:55.868291   246 solver.cpp:228] Iteration 9000, loss = 0.00296047
+I0218 06:52:55.868336   246 solver.cpp:244]     Train net output #0: loss = 0.00296053 (* 1 = 0.00296053 loss)
+I0218 06:52:55.868345   246 sgd_solver.cpp:106] Iteration 9000, lr = 0.00617924
+I0218 06:53:58.230998   246 solver.cpp:228] Iteration 9100, loss = 0.00154045
+I0218 06:53:58.231187   246 solver.cpp:244]     Train net output #0: loss = 0.00154052 (* 1 = 0.00154052 loss)
+I0218 06:53:58.231196   246 sgd_solver.cpp:106] Iteration 9100, lr = 0.00615496
+I0218 06:55:00.555765   246 solver.cpp:228] Iteration 9200, loss = 0.0143161
+I0218 06:55:00.555835   246 solver.cpp:244]     Train net output #0: loss = 0.0143162 (* 1 = 0.0143162 loss)
+I0218 06:55:00.555842   246 sgd_solver.cpp:106] Iteration 9200, lr = 0.0061309
+I0218 06:56:02.802006   246 solver.cpp:228] Iteration 9300, loss = 0.00434552
+I0218 06:56:02.802069   246 solver.cpp:244]     Train net output #0: loss = 0.00434559 (* 1 = 0.00434559 loss)
+I0218 06:56:02.802076   246 sgd_solver.cpp:106] Iteration 9300, lr = 0.00610706
+I0218 06:57:05.022497   246 solver.cpp:228] Iteration 9400, loss = 0.00216474
+I0218 06:57:05.022565   246 solver.cpp:244]     Train net output #0: loss = 0.00216481 (* 1 = 0.00216481 loss)
+I0218 06:57:05.022573   246 sgd_solver.cpp:106] Iteration 9400, lr = 0.00608343
+I0218 06:58:06.812352   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_9500.caffemodel
+I0218 06:58:06.817555   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_9500.solverstate
+I0218 06:58:06.819690   246 solver.cpp:337] Iteration 9500, Testing net (#0)
+I0218 06:58:43.484845   246 solver.cpp:404]     Test net output #0: accuracy = 0.9891
+I0218 06:58:43.484995   246 solver.cpp:404]     Test net output #1: loss = 0.036239 (* 1 = 0.036239 loss)
+I0218 06:58:44.102875   246 solver.cpp:228] Iteration 9500, loss = 0.00370684
+I0218 06:58:44.102918   246 solver.cpp:244]     Train net output #0: loss = 0.00370691 (* 1 = 0.00370691 loss)
+I0218 06:58:44.102926   246 sgd_solver.cpp:106] Iteration 9500, lr = 0.00606002
+I0218 06:59:46.595149   246 solver.cpp:228] Iteration 9600, loss = 0.00596828
+I0218 06:59:46.595213   246 solver.cpp:244]     Train net output #0: loss = 0.00596835 (* 1 = 0.00596835 loss)
+I0218 06:59:46.595221   246 sgd_solver.cpp:106] Iteration 9600, lr = 0.00603682
+I0218 07:00:48.818047   246 solver.cpp:228] Iteration 9700, loss = 0.00472393
+I0218 07:00:48.818229   246 solver.cpp:244]     Train net output #0: loss = 0.00472401 (* 1 = 0.00472401 loss)
+I0218 07:00:48.818238   246 sgd_solver.cpp:106] Iteration 9700, lr = 0.00601382
+I0218 07:01:50.962271   246 solver.cpp:228] Iteration 9800, loss = 0.0203958
+I0218 07:01:50.962324   246 solver.cpp:244]     Train net output #0: loss = 0.0203959 (* 1 = 0.0203959 loss)
+I0218 07:01:50.962345   246 sgd_solver.cpp:106] Iteration 9800, lr = 0.00599102
+I0218 07:02:53.256054   246 solver.cpp:228] Iteration 9900, loss = 0.0147738
+I0218 07:02:53.256119   246 solver.cpp:244]     Train net output #0: loss = 0.0147739 (* 1 = 0.0147739 loss)
+I0218 07:02:53.256126   246 sgd_solver.cpp:106] Iteration 9900, lr = 0.00596843
+I0218 07:03:55.099444   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_10000.caffemodel
+I0218 07:03:55.104472   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_10000.solverstate
+I0218 07:03:55.106611   246 solver.cpp:337] Iteration 10000, Testing net (#0)
+I0218 07:04:31.935731   246 solver.cpp:404]     Test net output #0: accuracy = 0.9907
+I0218 07:04:31.935911   246 solver.cpp:404]     Test net output #1: loss = 0.0334934 (* 1 = 0.0334934 loss)
+I0218 07:04:32.554529   246 solver.cpp:228] Iteration 10000, loss = 0.0402409
+I0218 07:04:32.554574   246 solver.cpp:244]     Train net output #0: loss = 0.0402409 (* 1 = 0.0402409 loss)
+I0218 07:04:32.554581   246 sgd_solver.cpp:106] Iteration 10000, lr = 0.00594604
+I0218 07:05:34.731622   246 solver.cpp:228] Iteration 10100, loss = 0.00695195
+I0218 07:05:34.731715   246 solver.cpp:244]     Train net output #0: loss = 0.00695201 (* 1 = 0.00695201 loss)
+I0218 07:05:34.731722   246 sgd_solver.cpp:106] Iteration 10100, lr = 0.00592384
+I0218 07:06:37.028228   246 solver.cpp:228] Iteration 10200, loss = 0.0136076
+I0218 07:06:37.028409   246 solver.cpp:244]     Train net output #0: loss = 0.0136077 (* 1 = 0.0136077 loss)
+I0218 07:06:37.028417   246 sgd_solver.cpp:106] Iteration 10200, lr = 0.00590183
+I0218 07:07:39.201902   246 solver.cpp:228] Iteration 10300, loss = 0.0331095
+I0218 07:07:39.201967   246 solver.cpp:244]     Train net output #0: loss = 0.0331096 (* 1 = 0.0331096 loss)
+I0218 07:07:39.201974   246 sgd_solver.cpp:106] Iteration 10300, lr = 0.00588001
+I0218 07:08:41.400009   246 solver.cpp:228] Iteration 10400, loss = 0.0118623
+I0218 07:08:41.400177   246 solver.cpp:244]     Train net output #0: loss = 0.0118624 (* 1 = 0.0118624 loss)
+I0218 07:08:41.400187   246 sgd_solver.cpp:106] Iteration 10400, lr = 0.00585838
+I0218 07:09:43.077708   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_10500.caffemodel
+I0218 07:09:43.082815   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_10500.solverstate
+I0218 07:09:43.084967   246 solver.cpp:337] Iteration 10500, Testing net (#0)
+I0218 07:10:19.677450   246 solver.cpp:404]     Test net output #0: accuracy = 0.9885
+I0218 07:10:19.677614   246 solver.cpp:404]     Test net output #1: loss = 0.0367733 (* 1 = 0.0367733 loss)
+I0218 07:10:20.295174   246 solver.cpp:228] Iteration 10500, loss = 0.127571
+I0218 07:10:20.295217   246 solver.cpp:244]     Train net output #0: loss = 0.127571 (* 1 = 0.127571 loss)
+I0218 07:10:20.295224   246 sgd_solver.cpp:106] Iteration 10500, lr = 0.00583693
+I0218 07:11:22.596479   246 solver.cpp:228] Iteration 10600, loss = 0.00107091
+I0218 07:11:22.596545   246 solver.cpp:244]     Train net output #0: loss = 0.00107097 (* 1 = 0.00107097 loss)
+I0218 07:11:22.596552   246 sgd_solver.cpp:106] Iteration 10600, lr = 0.00581567
+I0218 07:12:24.922122   246 solver.cpp:228] Iteration 10700, loss = 0.000995457
+I0218 07:12:24.922186   246 solver.cpp:244]     Train net output #0: loss = 0.000995514 (* 1 = 0.000995514 loss)
+I0218 07:12:24.922194   246 sgd_solver.cpp:106] Iteration 10700, lr = 0.00579458
+I0218 07:13:26.955401   246 solver.cpp:228] Iteration 10800, loss = 0.0173327
+I0218 07:13:26.955597   246 solver.cpp:244]     Train net output #0: loss = 0.0173328 (* 1 = 0.0173328 loss)
+I0218 07:13:26.955606   246 sgd_solver.cpp:106] Iteration 10800, lr = 0.00577368
+I0218 07:14:28.990121   246 solver.cpp:228] Iteration 10900, loss = 0.0164614
+I0218 07:14:28.990188   246 solver.cpp:244]     Train net output #0: loss = 0.0164615 (* 1 = 0.0164615 loss)
+I0218 07:14:28.990196   246 sgd_solver.cpp:106] Iteration 10900, lr = 0.00575295
+I0218 07:15:30.777007   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_11000.caffemodel
+I0218 07:15:30.782025   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_11000.solverstate
+I0218 07:15:30.784214   246 solver.cpp:337] Iteration 11000, Testing net (#0)
+I0218 07:16:07.679234   246 solver.cpp:404]     Test net output #0: accuracy = 0.9902
+I0218 07:16:07.679399   246 solver.cpp:404]     Test net output #1: loss = 0.0378247 (* 1 = 0.0378247 loss)
+I0218 07:16:08.303854   246 solver.cpp:228] Iteration 11000, loss = 0.00122749
+I0218 07:16:08.303898   246 solver.cpp:244]     Train net output #0: loss = 0.00122756 (* 1 = 0.00122756 loss)
+I0218 07:16:08.303905   246 sgd_solver.cpp:106] Iteration 11000, lr = 0.00573239
+I0218 07:17:10.425673   246 solver.cpp:228] Iteration 11100, loss = 0.00804991
+I0218 07:17:10.425740   246 solver.cpp:244]     Train net output #0: loss = 0.00804999 (* 1 = 0.00804999 loss)
+I0218 07:17:10.425748   246 sgd_solver.cpp:106] Iteration 11100, lr = 0.005712
+I0218 07:18:12.642925   246 solver.cpp:228] Iteration 11200, loss = 0.00146222
+I0218 07:18:12.643121   246 solver.cpp:244]     Train net output #0: loss = 0.00146229 (* 1 = 0.00146229 loss)
+I0218 07:18:12.643131   246 sgd_solver.cpp:106] Iteration 11200, lr = 0.00569178
+I0218 07:19:14.812793   246 solver.cpp:228] Iteration 11300, loss = 0.000288068
+I0218 07:19:14.812958   246 solver.cpp:244]     Train net output #0: loss = 0.000288135 (* 1 = 0.000288135 loss)
+I0218 07:19:14.812968   246 sgd_solver.cpp:106] Iteration 11300, lr = 0.00567173
+I0218 07:20:16.889482   246 solver.cpp:228] Iteration 11400, loss = 0.0113311
+I0218 07:20:16.889546   246 solver.cpp:244]     Train net output #0: loss = 0.0113312 (* 1 = 0.0113312 loss)
+I0218 07:20:16.889554   246 sgd_solver.cpp:106] Iteration 11400, lr = 0.00565184
+I0218 07:21:18.849316   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_11500.caffemodel
+I0218 07:21:18.854307   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_11500.solverstate
+I0218 07:21:18.856482   246 solver.cpp:337] Iteration 11500, Testing net (#0)
+I0218 07:21:55.779181   246 solver.cpp:404]     Test net output #0: accuracy = 0.9894
+I0218 07:21:55.779322   246 solver.cpp:404]     Test net output #1: loss = 0.040066 (* 1 = 0.040066 loss)
+I0218 07:21:56.398468   246 solver.cpp:228] Iteration 11500, loss = 0.000165492
+I0218 07:21:56.398514   246 solver.cpp:244]     Train net output #0: loss = 0.000165564 (* 1 = 0.000165564 loss)
+I0218 07:21:56.398521   246 sgd_solver.cpp:106] Iteration 11500, lr = 0.00563211
+I0218 07:22:58.846099   246 solver.cpp:228] Iteration 11600, loss = 0.00186117
+I0218 07:22:58.846256   246 solver.cpp:244]     Train net output #0: loss = 0.00186125 (* 1 = 0.00186125 loss)
+I0218 07:22:58.846279   246 sgd_solver.cpp:106] Iteration 11600, lr = 0.00561254
+I0218 07:24:01.246141   246 solver.cpp:228] Iteration 11700, loss = 0.00113214
+I0218 07:24:01.246207   246 solver.cpp:244]     Train net output #0: loss = 0.00113221 (* 1 = 0.00113221 loss)
+I0218 07:24:01.246215   246 sgd_solver.cpp:106] Iteration 11700, lr = 0.00559313
+I0218 07:25:03.384558   246 solver.cpp:228] Iteration 11800, loss = 0.000956589
+I0218 07:25:03.384723   246 solver.cpp:244]     Train net output #0: loss = 0.000956665 (* 1 = 0.000956665 loss)
+I0218 07:25:03.384733   246 sgd_solver.cpp:106] Iteration 11800, lr = 0.00557388
+I0218 07:26:05.415305   246 solver.cpp:228] Iteration 11900, loss = 0.00629052
+I0218 07:26:05.415372   246 solver.cpp:244]     Train net output #0: loss = 0.00629058 (* 1 = 0.00629058 loss)
+I0218 07:26:05.415380   246 sgd_solver.cpp:106] Iteration 11900, lr = 0.00555478
+I0218 07:27:07.249850   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_12000.caffemodel
+I0218 07:27:07.254962   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_12000.solverstate
+I0218 07:27:07.257097   246 solver.cpp:337] Iteration 12000, Testing net (#0)
+I0218 07:27:44.054972   246 solver.cpp:404]     Test net output #0: accuracy = 0.9912
+I0218 07:27:44.055133   246 solver.cpp:404]     Test net output #1: loss = 0.0290129 (* 1 = 0.0290129 loss)
+I0218 07:27:44.671939   246 solver.cpp:228] Iteration 12000, loss = 0.0014092
+I0218 07:27:44.671983   246 solver.cpp:244]     Train net output #0: loss = 0.00140927 (* 1 = 0.00140927 loss)
+I0218 07:27:44.671989   246 sgd_solver.cpp:106] Iteration 12000, lr = 0.00553583
+I0218 07:28:47.102524   246 solver.cpp:228] Iteration 12100, loss = 0.0151101
+I0218 07:28:47.102589   246 solver.cpp:244]     Train net output #0: loss = 0.0151102 (* 1 = 0.0151102 loss)
+I0218 07:28:47.102597   246 sgd_solver.cpp:106] Iteration 12100, lr = 0.00551704
+I0218 07:29:49.539628   246 solver.cpp:228] Iteration 12200, loss = 0.0107159
+I0218 07:29:49.539794   246 solver.cpp:244]     Train net output #0: loss = 0.0107159 (* 1 = 0.0107159 loss)
+I0218 07:29:49.539804   246 sgd_solver.cpp:106] Iteration 12200, lr = 0.00549839
+I0218 07:30:51.873127   246 solver.cpp:228] Iteration 12300, loss = 0.00108637
+I0218 07:30:51.873318   246 solver.cpp:244]     Train net output #0: loss = 0.00108644 (* 1 = 0.00108644 loss)
+I0218 07:30:51.873327   246 sgd_solver.cpp:106] Iteration 12300, lr = 0.00547988
+I0218 07:31:54.254406   246 solver.cpp:228] Iteration 12400, loss = 0.00990942
+I0218 07:31:54.254592   246 solver.cpp:244]     Train net output #0: loss = 0.00990948 (* 1 = 0.00990948 loss)
+I0218 07:31:54.254602   246 sgd_solver.cpp:106] Iteration 12400, lr = 0.00546153
+I0218 07:32:56.158766   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_12500.caffemodel
+I0218 07:32:56.163769   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_12500.solverstate
+I0218 07:32:56.165930   246 solver.cpp:337] Iteration 12500, Testing net (#0)
+I0218 07:33:33.041277   246 solver.cpp:404]     Test net output #0: accuracy = 0.9891
+I0218 07:33:33.041436   246 solver.cpp:404]     Test net output #1: loss = 0.0375426 (* 1 = 0.0375426 loss)
+I0218 07:33:33.658915   246 solver.cpp:228] Iteration 12500, loss = 0.0184762
+I0218 07:33:33.658960   246 solver.cpp:244]     Train net output #0: loss = 0.0184763 (* 1 = 0.0184763 loss)
+I0218 07:33:33.658968   246 sgd_solver.cpp:106] Iteration 12500, lr = 0.00544331
+I0218 07:34:35.798025   246 solver.cpp:228] Iteration 12600, loss = 0.00232463
+I0218 07:34:35.798209   246 solver.cpp:244]     Train net output #0: loss = 0.00232469 (* 1 = 0.00232469 loss)
+I0218 07:34:35.798218   246 sgd_solver.cpp:106] Iteration 12600, lr = 0.00542524
+I0218 07:35:38.314368   246 solver.cpp:228] Iteration 12700, loss = 0.00308154
+I0218 07:35:38.314435   246 solver.cpp:244]     Train net output #0: loss = 0.0030816 (* 1 = 0.0030816 loss)
+I0218 07:35:38.314443   246 sgd_solver.cpp:106] Iteration 12700, lr = 0.0054073
+I0218 07:36:40.868796   246 solver.cpp:228] Iteration 12800, loss = 1.53252e-05
+I0218 07:36:40.868960   246 solver.cpp:244]     Train net output #0: loss = 1.53863e-05 (* 1 = 1.53863e-05 loss)
+I0218 07:36:40.868969   246 sgd_solver.cpp:106] Iteration 12800, lr = 0.0053895
+I0218 07:37:43.062757   246 solver.cpp:228] Iteration 12900, loss = 0.000680611
+I0218 07:37:43.062822   246 solver.cpp:244]     Train net output #0: loss = 0.000680687 (* 1 = 0.000680687 loss)
+I0218 07:37:43.062830   246 sgd_solver.cpp:106] Iteration 12900, lr = 0.00537184
+I0218 07:38:45.085041   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_13000.caffemodel
+I0218 07:38:45.090181   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_13000.solverstate
+I0218 07:38:45.092269   246 solver.cpp:337] Iteration 13000, Testing net (#0)
+I0218 07:39:21.996265   246 solver.cpp:404]     Test net output #0: accuracy = 0.9899
+I0218 07:39:21.996330   246 solver.cpp:404]     Test net output #1: loss = 0.042173 (* 1 = 0.042173 loss)
+I0218 07:39:22.618826   246 solver.cpp:228] Iteration 13000, loss = 0.00654506
+I0218 07:39:22.618871   246 solver.cpp:244]     Train net output #0: loss = 0.00654514 (* 1 = 0.00654514 loss)
+I0218 07:39:22.618878   246 sgd_solver.cpp:106] Iteration 13000, lr = 0.00535432
+I0218 07:40:24.936450   246 solver.cpp:228] Iteration 13100, loss = 0.00204224
+I0218 07:40:24.936617   246 solver.cpp:244]     Train net output #0: loss = 0.00204233 (* 1 = 0.00204233 loss)
+I0218 07:40:24.936626   246 sgd_solver.cpp:106] Iteration 13100, lr = 0.00533692
+I0218 07:41:27.377363   246 solver.cpp:228] Iteration 13200, loss = 0.00851397
+I0218 07:41:27.377532   246 solver.cpp:244]     Train net output #0: loss = 0.00851405 (* 1 = 0.00851405 loss)
+I0218 07:41:27.377542   246 sgd_solver.cpp:106] Iteration 13200, lr = 0.00531966
+I0218 07:42:29.831012   246 solver.cpp:228] Iteration 13300, loss = 0.00224459
+I0218 07:42:29.831128   246 solver.cpp:244]     Train net output #0: loss = 0.00224467 (* 1 = 0.00224467 loss)
+I0218 07:42:29.831137   246 sgd_solver.cpp:106] Iteration 13300, lr = 0.00530253
+I0218 07:43:32.185071   246 solver.cpp:228] Iteration 13400, loss = 0.0146865
+I0218 07:43:32.185140   246 solver.cpp:244]     Train net output #0: loss = 0.0146866 (* 1 = 0.0146866 loss)
+I0218 07:43:32.185148   246 sgd_solver.cpp:106] Iteration 13400, lr = 0.00528552
+I0218 07:44:33.842522   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_13500.caffemodel
+I0218 07:44:33.847780   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_13500.solverstate
+I0218 07:44:33.849905   246 solver.cpp:337] Iteration 13500, Testing net (#0)
+I0218 07:45:10.550211   246 solver.cpp:404]     Test net output #0: accuracy = 0.9899
+I0218 07:45:10.550397   246 solver.cpp:404]     Test net output #1: loss = 0.0369633 (* 1 = 0.0369633 loss)
+I0218 07:45:11.168524   246 solver.cpp:228] Iteration 13500, loss = 0.0271182
+I0218 07:45:11.168567   246 solver.cpp:244]     Train net output #0: loss = 0.0271182 (* 1 = 0.0271182 loss)
+I0218 07:45:11.168576   246 sgd_solver.cpp:106] Iteration 13500, lr = 0.00526865
+I0218 07:46:13.850756   246 solver.cpp:228] Iteration 13600, loss = 0.000581516
+I0218 07:46:13.850822   246 solver.cpp:244]     Train net output #0: loss = 0.000581576 (* 1 = 0.000581576 loss)
+I0218 07:46:13.850829   246 sgd_solver.cpp:106] Iteration 13600, lr = 0.00525189
+I0218 07:47:16.089184   246 solver.cpp:228] Iteration 13700, loss = 0.00129073
+I0218 07:47:16.089248   246 solver.cpp:244]     Train net output #0: loss = 0.00129079 (* 1 = 0.00129079 loss)
+I0218 07:47:16.089255   246 sgd_solver.cpp:106] Iteration 13700, lr = 0.00523527
+I0218 07:48:18.623186   246 solver.cpp:228] Iteration 13800, loss = 0.000950536
+I0218 07:48:18.623253   246 solver.cpp:244]     Train net output #0: loss = 0.000950604 (* 1 = 0.000950604 loss)
+I0218 07:48:18.623261   246 sgd_solver.cpp:106] Iteration 13800, lr = 0.00521876
+I0218 07:49:21.125444   246 solver.cpp:228] Iteration 13900, loss = 0.0012331
+I0218 07:49:21.125510   246 solver.cpp:244]     Train net output #0: loss = 0.00123316 (* 1 = 0.00123316 loss)
+I0218 07:49:21.125519   246 sgd_solver.cpp:106] Iteration 13900, lr = 0.00520237
+I0218 07:50:23.119822   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_14000.caffemodel
+I0218 07:50:23.124851   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_14000.solverstate
+I0218 07:50:23.126899   246 solver.cpp:337] Iteration 14000, Testing net (#0)
+I0218 07:51:00.010200   246 solver.cpp:404]     Test net output #0: accuracy = 0.992
+I0218 07:51:00.010362   246 solver.cpp:404]     Test net output #1: loss = 0.0333857 (* 1 = 0.0333857 loss)
+I0218 07:51:00.629099   246 solver.cpp:228] Iteration 14000, loss = 0.00359476
+I0218 07:51:00.629144   246 solver.cpp:244]     Train net output #0: loss = 0.00359484 (* 1 = 0.00359484 loss)
+I0218 07:51:00.629151   246 sgd_solver.cpp:106] Iteration 14000, lr = 0.00518611
+I0218 07:52:03.533010   246 solver.cpp:228] Iteration 14100, loss = 0.00400807
+I0218 07:52:03.533176   246 solver.cpp:244]     Train net output #0: loss = 0.00400814 (* 1 = 0.00400814 loss)
+I0218 07:52:03.533186   246 sgd_solver.cpp:106] Iteration 14100, lr = 0.00516996
+I0218 07:53:06.144605   246 solver.cpp:228] Iteration 14200, loss = 0.000969429
+I0218 07:53:06.144670   246 solver.cpp:244]     Train net output #0: loss = 0.000969507 (* 1 = 0.000969507 loss)
+I0218 07:53:06.144678   246 sgd_solver.cpp:106] Iteration 14200, lr = 0.00515393
+I0218 07:54:08.940572   246 solver.cpp:228] Iteration 14300, loss = 0.00413616
+I0218 07:54:08.940639   246 solver.cpp:244]     Train net output #0: loss = 0.00413624 (* 1 = 0.00413624 loss)
+I0218 07:54:08.940645   246 sgd_solver.cpp:106] Iteration 14300, lr = 0.00513801
+I0218 07:55:11.978794   246 solver.cpp:228] Iteration 14400, loss = 0.0204373
+I0218 07:55:11.978889   246 solver.cpp:244]     Train net output #0: loss = 0.0204374 (* 1 = 0.0204374 loss)
+I0218 07:55:11.978897   246 sgd_solver.cpp:106] Iteration 14400, lr = 0.00512221
+I0218 07:56:13.884076   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_14500.caffemodel
+I0218 07:56:13.889158   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_14500.solverstate
+I0218 07:56:13.891281   246 solver.cpp:337] Iteration 14500, Testing net (#0)
+I0218 07:56:50.781858   246 solver.cpp:404]     Test net output #0: accuracy = 0.9891
+I0218 07:56:50.781936   246 solver.cpp:404]     Test net output #1: loss = 0.0414411 (* 1 = 0.0414411 loss)
+I0218 07:56:51.400560   246 solver.cpp:228] Iteration 14500, loss = 0.000316339
+I0218 07:56:51.400606   246 solver.cpp:244]     Train net output #0: loss = 0.000316422 (* 1 = 0.000316422 loss)
+I0218 07:56:51.400614   246 sgd_solver.cpp:106] Iteration 14500, lr = 0.00510653
+I0218 07:57:54.049675   246 solver.cpp:228] Iteration 14600, loss = 0.0034387
+I0218 07:57:54.049783   246 solver.cpp:244]     Train net output #0: loss = 0.00343879 (* 1 = 0.00343879 loss)
+I0218 07:57:54.049805   246 sgd_solver.cpp:106] Iteration 14600, lr = 0.00509095
+I0218 07:58:56.464913   246 solver.cpp:228] Iteration 14700, loss = 0.000329752
+I0218 07:58:56.465034   246 solver.cpp:244]     Train net output #0: loss = 0.000329835 (* 1 = 0.000329835 loss)
+I0218 07:58:56.465041   246 sgd_solver.cpp:106] Iteration 14700, lr = 0.00507548
+I0218 07:59:59.225986   246 solver.cpp:228] Iteration 14800, loss = 0.00176621
+I0218 07:59:59.226104   246 solver.cpp:244]     Train net output #0: loss = 0.00176629 (* 1 = 0.00176629 loss)
+I0218 07:59:59.226111   246 sgd_solver.cpp:106] Iteration 14800, lr = 0.00506012
+I0218 08:01:02.110664   246 solver.cpp:228] Iteration 14900, loss = 0.000331602
+I0218 08:01:02.110754   246 solver.cpp:244]     Train net output #0: loss = 0.000331689 (* 1 = 0.000331689 loss)
+I0218 08:01:02.110762   246 sgd_solver.cpp:106] Iteration 14900, lr = 0.00504488
+I0218 08:02:04.236613   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_15000.caffemodel
+I0218 08:02:04.241765   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_15000.solverstate
+I0218 08:02:04.243885   246 solver.cpp:337] Iteration 15000, Testing net (#0)
+I0218 08:02:41.054991   246 solver.cpp:404]     Test net output #0: accuracy = 0.9909
+I0218 08:02:41.055064   246 solver.cpp:404]     Test net output #1: loss = 0.0373678 (* 1 = 0.0373678 loss)
+I0218 08:02:41.674393   246 solver.cpp:228] Iteration 15000, loss = 0.000648313
+I0218 08:02:41.674439   246 solver.cpp:244]     Train net output #0: loss = 0.000648391 (* 1 = 0.000648391 loss)
+I0218 08:02:41.674446   246 sgd_solver.cpp:106] Iteration 15000, lr = 0.00502973
+I0218 08:03:44.499135   246 solver.cpp:228] Iteration 15100, loss = 0.00743661
+I0218 08:03:44.499199   246 solver.cpp:244]     Train net output #0: loss = 0.00743669 (* 1 = 0.00743669 loss)
+I0218 08:03:44.499207   246 sgd_solver.cpp:106] Iteration 15100, lr = 0.0050147
+I0218 08:04:46.928930   246 solver.cpp:228] Iteration 15200, loss = 0.000648133
+I0218 08:04:46.928993   246 solver.cpp:244]     Train net output #0: loss = 0.000648209 (* 1 = 0.000648209 loss)
+I0218 08:04:46.929002   246 sgd_solver.cpp:106] Iteration 15200, lr = 0.00499976
+I0218 08:05:50.152328   246 solver.cpp:228] Iteration 15300, loss = 0.00105893
+I0218 08:05:50.152390   246 solver.cpp:244]     Train net output #0: loss = 0.00105901 (* 1 = 0.00105901 loss)
+I0218 08:05:50.152397   246 sgd_solver.cpp:106] Iteration 15300, lr = 0.00498494
+I0218 08:06:53.093878   246 solver.cpp:228] Iteration 15400, loss = 0.000118987
+I0218 08:06:53.093976   246 solver.cpp:244]     Train net output #0: loss = 0.000119065 (* 1 = 0.000119065 loss)
+I0218 08:06:53.093984   246 sgd_solver.cpp:106] Iteration 15400, lr = 0.00497021
+I0218 08:07:55.496928   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_15500.caffemodel
+I0218 08:07:55.501991   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_15500.solverstate
+I0218 08:07:55.504129   246 solver.cpp:337] Iteration 15500, Testing net (#0)
+I0218 08:08:32.437424   246 solver.cpp:404]     Test net output #0: accuracy = 0.9897
+I0218 08:08:32.437527   246 solver.cpp:404]     Test net output #1: loss = 0.0366575 (* 1 = 0.0366575 loss)
+I0218 08:08:33.056329   246 solver.cpp:228] Iteration 15500, loss = 0.0029512
+I0218 08:08:33.056372   246 solver.cpp:244]     Train net output #0: loss = 0.00295128 (* 1 = 0.00295128 loss)
+I0218 08:08:33.056380   246 sgd_solver.cpp:106] Iteration 15500, lr = 0.00495558
+I0218 08:09:36.022534   246 solver.cpp:228] Iteration 15600, loss = 0.000851879
+I0218 08:09:36.022717   246 solver.cpp:244]     Train net output #0: loss = 0.000851949 (* 1 = 0.000851949 loss)
+I0218 08:09:36.022727   246 sgd_solver.cpp:106] Iteration 15600, lr = 0.00494106
+I0218 08:10:38.883392   246 solver.cpp:228] Iteration 15700, loss = 0.00422614
+I0218 08:10:38.883460   246 solver.cpp:244]     Train net output #0: loss = 0.00422621 (* 1 = 0.00422621 loss)
+I0218 08:10:38.883468   246 sgd_solver.cpp:106] Iteration 15700, lr = 0.00492663
+I0218 08:11:41.431468   246 solver.cpp:228] Iteration 15800, loss = 0.00717999
+I0218 08:11:41.431535   246 solver.cpp:244]     Train net output #0: loss = 0.00718006 (* 1 = 0.00718006 loss)
+I0218 08:11:41.431542   246 sgd_solver.cpp:106] Iteration 15800, lr = 0.0049123
+I0218 08:12:44.498749   246 solver.cpp:228] Iteration 15900, loss = 0.0011093
+I0218 08:12:44.498818   246 solver.cpp:244]     Train net output #0: loss = 0.00110937 (* 1 = 0.00110937 loss)
+I0218 08:12:44.498826   246 sgd_solver.cpp:106] Iteration 15900, lr = 0.00489807
+I0218 08:13:46.825898   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_16000.caffemodel
+I0218 08:13:46.830873   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_16000.solverstate
+I0218 08:13:46.833004   246 solver.cpp:337] Iteration 16000, Testing net (#0)
+I0218 08:14:23.618206   246 solver.cpp:404]     Test net output #0: accuracy = 0.9897
+I0218 08:14:23.618387   246 solver.cpp:404]     Test net output #1: loss = 0.0422864 (* 1 = 0.0422864 loss)
+I0218 08:14:24.237291   246 solver.cpp:228] Iteration 16000, loss = 0.00258591
+I0218 08:14:24.237334   246 solver.cpp:244]     Train net output #0: loss = 0.00258599 (* 1 = 0.00258599 loss)
+I0218 08:14:24.237340   246 sgd_solver.cpp:106] Iteration 16000, lr = 0.00488394
+I0218 08:15:27.137092   246 solver.cpp:228] Iteration 16100, loss = 0.000299347
+I0218 08:15:27.137159   246 solver.cpp:244]     Train net output #0: loss = 0.000299423 (* 1 = 0.000299423 loss)
+I0218 08:15:27.137167   246 sgd_solver.cpp:106] Iteration 16100, lr = 0.0048699
+I0218 08:16:30.470506   246 solver.cpp:228] Iteration 16200, loss = 0.00211069
+I0218 08:16:30.470687   246 solver.cpp:244]     Train net output #0: loss = 0.00211076 (* 1 = 0.00211076 loss)
+I0218 08:16:30.470696   246 sgd_solver.cpp:106] Iteration 16200, lr = 0.00485595
+I0218 08:17:33.277681   246 solver.cpp:228] Iteration 16300, loss = 0.000523251
+I0218 08:17:33.277746   246 solver.cpp:244]     Train net output #0: loss = 0.000523318 (* 1 = 0.000523318 loss)
+I0218 08:17:33.277755   246 sgd_solver.cpp:106] Iteration 16300, lr = 0.00484209
+I0218 08:18:36.252108   246 solver.cpp:228] Iteration 16400, loss = 0.000519103
+I0218 08:18:36.252271   246 solver.cpp:244]     Train net output #0: loss = 0.000519172 (* 1 = 0.000519172 loss)
+I0218 08:18:36.252280   246 sgd_solver.cpp:106] Iteration 16400, lr = 0.00482833
+I0218 08:19:37.812492   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_16500.caffemodel
+I0218 08:19:37.817612   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_16500.solverstate
+I0218 08:19:37.819842   246 solver.cpp:337] Iteration 16500, Testing net (#0)
+I0218 08:20:14.808809   246 solver.cpp:404]     Test net output #0: accuracy = 0.99
+I0218 08:20:14.808976   246 solver.cpp:404]     Test net output #1: loss = 0.0381242 (* 1 = 0.0381242 loss)
+I0218 08:20:15.428128   246 solver.cpp:228] Iteration 16500, loss = 0.018354
+I0218 08:20:15.428174   246 solver.cpp:244]     Train net output #0: loss = 0.0183541 (* 1 = 0.0183541 loss)
+I0218 08:20:15.428180   246 sgd_solver.cpp:106] Iteration 16500, lr = 0.00481466
+I0218 08:21:18.030683   246 solver.cpp:228] Iteration 16600, loss = 0.00262317
+I0218 08:21:18.030750   246 solver.cpp:244]     Train net output #0: loss = 0.00262324 (* 1 = 0.00262324 loss)
+I0218 08:21:18.030756   246 sgd_solver.cpp:106] Iteration 16600, lr = 0.00480108
+I0218 08:22:20.983561   246 solver.cpp:228] Iteration 16700, loss = 0.000197297
+I0218 08:22:20.983629   246 solver.cpp:244]     Train net output #0: loss = 0.000197363 (* 1 = 0.000197363 loss)
+I0218 08:22:20.983636   246 sgd_solver.cpp:106] Iteration 16700, lr = 0.00478759
+I0218 08:23:23.608234   246 solver.cpp:228] Iteration 16800, loss = 0.00307951
+I0218 08:23:23.608301   246 solver.cpp:244]     Train net output #0: loss = 0.00307959 (* 1 = 0.00307959 loss)
+I0218 08:23:23.608309   246 sgd_solver.cpp:106] Iteration 16800, lr = 0.00477418
+I0218 08:24:26.883689   246 solver.cpp:228] Iteration 16900, loss = 0.045782
+I0218 08:24:26.883754   246 solver.cpp:244]     Train net output #0: loss = 0.0457821 (* 1 = 0.0457821 loss)
+I0218 08:24:26.883762   246 sgd_solver.cpp:106] Iteration 16900, lr = 0.00476086
+I0218 08:25:28.960809   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_17000.caffemodel
+I0218 08:25:28.965929   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_17000.solverstate
+I0218 08:25:28.968091   246 solver.cpp:337] Iteration 17000, Testing net (#0)
+I0218 08:26:05.904752   246 solver.cpp:404]     Test net output #0: accuracy = 0.9907
+I0218 08:26:05.904808   246 solver.cpp:404]     Test net output #1: loss = 0.0358081 (* 1 = 0.0358081 loss)
+I0218 08:26:06.523447   246 solver.cpp:228] Iteration 17000, loss = 0.00211864
+I0218 08:26:06.523491   246 solver.cpp:244]     Train net output #0: loss = 0.00211871 (* 1 = 0.00211871 loss)
+I0218 08:26:06.523499   246 sgd_solver.cpp:106] Iteration 17000, lr = 0.00474763
+I0218 08:27:09.239917   246 solver.cpp:228] Iteration 17100, loss = 0.00201587
+I0218 08:27:09.240080   246 solver.cpp:244]     Train net output #0: loss = 0.00201594 (* 1 = 0.00201594 loss)
+I0218 08:27:09.240103   246 sgd_solver.cpp:106] Iteration 17100, lr = 0.00473449
+I0218 08:28:12.243609   246 solver.cpp:228] Iteration 17200, loss = 0.000495471
+I0218 08:28:12.243773   246 solver.cpp:244]     Train net output #0: loss = 0.000495536 (* 1 = 0.000495536 loss)
+I0218 08:28:12.243782   246 sgd_solver.cpp:106] Iteration 17200, lr = 0.00472143
+I0218 08:29:14.996129   246 solver.cpp:228] Iteration 17300, loss = 0.00184689
+I0218 08:29:14.996196   246 solver.cpp:244]     Train net output #0: loss = 0.00184696 (* 1 = 0.00184696 loss)
+I0218 08:29:14.996204   246 sgd_solver.cpp:106] Iteration 17300, lr = 0.00470845
+I0218 08:30:18.207446   246 solver.cpp:228] Iteration 17400, loss = 0.00528202
+I0218 08:30:18.207614   246 solver.cpp:244]     Train net output #0: loss = 0.00528208 (* 1 = 0.00528208 loss)
+I0218 08:30:18.207623   246 sgd_solver.cpp:106] Iteration 17400, lr = 0.00469556
+I0218 08:31:20.540500   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_17500.caffemodel
+I0218 08:31:20.545717   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_17500.solverstate
+I0218 08:31:20.547878   246 solver.cpp:337] Iteration 17500, Testing net (#0)
+I0218 08:31:57.277587   246 solver.cpp:404]     Test net output #0: accuracy = 0.9872
+I0218 08:31:57.277751   246 solver.cpp:404]     Test net output #1: loss = 0.0506496 (* 1 = 0.0506496 loss)
+I0218 08:31:57.896117   246 solver.cpp:228] Iteration 17500, loss = 0.000297651
+I0218 08:31:57.896163   246 solver.cpp:244]     Train net output #0: loss = 0.000297717 (* 1 = 0.000297717 loss)
+I0218 08:31:57.896172   246 sgd_solver.cpp:106] Iteration 17500, lr = 0.00468274
+I0218 08:33:01.078327   246 solver.cpp:228] Iteration 17600, loss = 0.00302472
+I0218 08:33:01.078493   246 solver.cpp:244]     Train net output #0: loss = 0.00302479 (* 1 = 0.00302479 loss)
+I0218 08:33:01.078502   246 sgd_solver.cpp:106] Iteration 17600, lr = 0.00467001
+I0218 08:34:03.746518   246 solver.cpp:228] Iteration 17700, loss = 0.00999854
+I0218 08:34:03.746584   246 solver.cpp:244]     Train net output #0: loss = 0.0099986 (* 1 = 0.0099986 loss)
+I0218 08:34:03.746592   246 sgd_solver.cpp:106] Iteration 17700, lr = 0.00465736
+I0218 08:35:06.344729   246 solver.cpp:228] Iteration 17800, loss = 0.00059921
+I0218 08:35:06.344797   246 solver.cpp:244]     Train net output #0: loss = 0.000599273 (* 1 = 0.000599273 loss)
+I0218 08:35:06.344805   246 sgd_solver.cpp:106] Iteration 17800, lr = 0.00464479
+I0218 08:36:08.864421   246 solver.cpp:228] Iteration 17900, loss = 0.000554356
+I0218 08:36:08.864603   246 solver.cpp:244]     Train net output #0: loss = 0.000554415 (* 1 = 0.000554415 loss)
+I0218 08:36:08.864611   246 sgd_solver.cpp:106] Iteration 17900, lr = 0.0046323
+I0218 08:37:10.446388   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_18000.caffemodel
+I0218 08:37:10.451536   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_18000.solverstate
+I0218 08:37:10.453655   246 solver.cpp:337] Iteration 18000, Testing net (#0)
+I0218 08:37:47.054445   246 solver.cpp:404]     Test net output #0: accuracy = 0.9902
+I0218 08:37:47.054605   246 solver.cpp:404]     Test net output #1: loss = 0.0381951 (* 1 = 0.0381951 loss)
+I0218 08:37:47.673034   246 solver.cpp:228] Iteration 18000, loss = 0.00300128
+I0218 08:37:47.673079   246 solver.cpp:244]     Train net output #0: loss = 0.00300133 (* 1 = 0.00300133 loss)
+I0218 08:37:47.673086   246 sgd_solver.cpp:106] Iteration 18000, lr = 0.00461989
+I0218 08:38:50.371096   246 solver.cpp:228] Iteration 18100, loss = 0.00193659
+I0218 08:38:50.371263   246 solver.cpp:244]     Train net output #0: loss = 0.00193665 (* 1 = 0.00193665 loss)
+I0218 08:38:50.371271   246 sgd_solver.cpp:106] Iteration 18100, lr = 0.00460755
+I0218 08:39:53.030551   246 solver.cpp:228] Iteration 18200, loss = 0.000849942
+I0218 08:39:53.030731   246 solver.cpp:244]     Train net output #0: loss = 0.000849997 (* 1 = 0.000849997 loss)
+I0218 08:39:53.030741   246 sgd_solver.cpp:106] Iteration 18200, lr = 0.00459529
+I0218 08:40:55.600359   246 solver.cpp:228] Iteration 18300, loss = 0.00163161
+I0218 08:40:55.600425   246 solver.cpp:244]     Train net output #0: loss = 0.00163166 (* 1 = 0.00163166 loss)
+I0218 08:40:55.600432   246 sgd_solver.cpp:106] Iteration 18300, lr = 0.00458311
+I0218 08:41:58.394336   246 solver.cpp:228] Iteration 18400, loss = 0.000558653
+I0218 08:41:58.394389   246 solver.cpp:244]     Train net output #0: loss = 0.00055871 (* 1 = 0.00055871 loss)
+I0218 08:41:58.394397   246 sgd_solver.cpp:106] Iteration 18400, lr = 0.004571
+I0218 08:43:00.514437   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_18500.caffemodel
+I0218 08:43:00.519548   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_18500.solverstate
+I0218 08:43:00.521714   246 solver.cpp:337] Iteration 18500, Testing net (#0)
+I0218 08:43:37.422021   246 solver.cpp:404]     Test net output #0: accuracy = 0.9889
+I0218 08:43:37.422214   246 solver.cpp:404]     Test net output #1: loss = 0.0416646 (* 1 = 0.0416646 loss)
+I0218 08:43:38.048591   246 solver.cpp:228] Iteration 18500, loss = 0.00442195
+I0218 08:43:38.048637   246 solver.cpp:244]     Train net output #0: loss = 0.00442201 (* 1 = 0.00442201 loss)
+I0218 08:43:38.048645   246 sgd_solver.cpp:106] Iteration 18500, lr = 0.00455897
+I0218 08:44:40.555526   246 solver.cpp:228] Iteration 18600, loss = 0.00153184
+I0218 08:44:40.555608   246 solver.cpp:244]     Train net output #0: loss = 0.0015319 (* 1 = 0.0015319 loss)
+I0218 08:44:40.555629   246 sgd_solver.cpp:106] Iteration 18600, lr = 0.00454701
+I0218 08:45:42.960444   246 solver.cpp:228] Iteration 18700, loss = 0.00144217
+I0218 08:45:42.960574   246 solver.cpp:244]     Train net output #0: loss = 0.00144223 (* 1 = 0.00144223 loss)
+I0218 08:45:42.960594   246 sgd_solver.cpp:106] Iteration 18700, lr = 0.00453512
+I0218 08:46:45.501852   246 solver.cpp:228] Iteration 18800, loss = 0.00562311
+I0218 08:46:45.501916   246 solver.cpp:244]     Train net output #0: loss = 0.00562317 (* 1 = 0.00562317 loss)
+I0218 08:46:45.501924   246 sgd_solver.cpp:106] Iteration 18800, lr = 0.0045233
+I0218 08:47:48.018967   246 solver.cpp:228] Iteration 18900, loss = 0.000871717
+I0218 08:47:48.019032   246 solver.cpp:244]     Train net output #0: loss = 0.000871773 (* 1 = 0.000871773 loss)
+I0218 08:47:48.019039   246 sgd_solver.cpp:106] Iteration 18900, lr = 0.00451156
+I0218 08:48:49.771945   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_19000.caffemodel
+I0218 08:48:49.776942   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_19000.solverstate
+I0218 08:48:49.779044   246 solver.cpp:337] Iteration 19000, Testing net (#0)
+I0218 08:49:26.482964   246 solver.cpp:404]     Test net output #0: accuracy = 0.9912
+I0218 08:49:26.483028   246 solver.cpp:404]     Test net output #1: loss = 0.0324443 (* 1 = 0.0324443 loss)
+I0218 08:49:27.101119   246 solver.cpp:228] Iteration 19000, loss = 0.000370057
+I0218 08:49:27.101163   246 solver.cpp:244]     Train net output #0: loss = 0.000370113 (* 1 = 0.000370113 loss)
+I0218 08:49:27.101171   246 sgd_solver.cpp:106] Iteration 19000, lr = 0.00449989
+I0218 08:50:29.814397   246 solver.cpp:228] Iteration 19100, loss = 0.000610835
+I0218 08:50:29.814466   246 solver.cpp:244]     Train net output #0: loss = 0.000610897 (* 1 = 0.000610897 loss)
+I0218 08:50:29.814473   246 sgd_solver.cpp:106] Iteration 19100, lr = 0.00448828
+I0218 08:51:32.405983   246 solver.cpp:228] Iteration 19200, loss = 0.00493758
+I0218 08:51:32.406147   246 solver.cpp:244]     Train net output #0: loss = 0.00493764 (* 1 = 0.00493764 loss)
+I0218 08:51:32.406157   246 sgd_solver.cpp:106] Iteration 19200, lr = 0.00447675
+I0218 08:52:34.890089   246 solver.cpp:228] Iteration 19300, loss = 0.00394158
+I0218 08:52:34.890153   246 solver.cpp:244]     Train net output #0: loss = 0.00394164 (* 1 = 0.00394164 loss)
+I0218 08:52:34.890161   246 sgd_solver.cpp:106] Iteration 19300, lr = 0.00446529
+I0218 08:53:37.813410   246 solver.cpp:228] Iteration 19400, loss = 0.00450571
+I0218 08:53:37.813509   246 solver.cpp:244]     Train net output #0: loss = 0.00450577 (* 1 = 0.00450577 loss)
+I0218 08:53:37.813518   246 sgd_solver.cpp:106] Iteration 19400, lr = 0.00445389
+I0218 08:54:39.683451   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_19500.caffemodel
+I0218 08:54:39.688376   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_19500.solverstate
+I0218 08:54:39.690490   246 solver.cpp:337] Iteration 19500, Testing net (#0)
+I0218 08:55:16.616837   246 solver.cpp:404]     Test net output #0: accuracy = 0.9912
+I0218 08:55:16.616930   246 solver.cpp:404]     Test net output #1: loss = 0.038433 (* 1 = 0.038433 loss)
+I0218 08:55:17.235615   246 solver.cpp:228] Iteration 19500, loss = 0.00328962
+I0218 08:55:17.235659   246 solver.cpp:244]     Train net output #0: loss = 0.00328968 (* 1 = 0.00328968 loss)
+I0218 08:55:17.235666   246 sgd_solver.cpp:106] Iteration 19500, lr = 0.00444256
+I0218 08:56:19.862473   246 solver.cpp:228] Iteration 19600, loss = 0.002471
+I0218 08:56:19.862542   246 solver.cpp:244]     Train net output #0: loss = 0.00247105 (* 1 = 0.00247105 loss)
+I0218 08:56:19.862550   246 sgd_solver.cpp:106] Iteration 19600, lr = 0.0044313
+I0218 08:57:22.537958   246 solver.cpp:228] Iteration 19700, loss = 0.00416272
+I0218 08:57:22.538112   246 solver.cpp:244]     Train net output #0: loss = 0.00416277 (* 1 = 0.00416277 loss)
+I0218 08:57:22.538122   246 sgd_solver.cpp:106] Iteration 19700, lr = 0.00442011
+I0218 08:58:24.984431   246 solver.cpp:228] Iteration 19800, loss = 0.000123592
+I0218 08:58:24.984498   246 solver.cpp:244]     Train net output #0: loss = 0.000123641 (* 1 = 0.000123641 loss)
+I0218 08:58:24.984504   246 sgd_solver.cpp:106] Iteration 19800, lr = 0.00440898
+I0218 08:59:27.879881   246 solver.cpp:228] Iteration 19900, loss = 0.000798312
+I0218 08:59:27.880081   246 solver.cpp:244]     Train net output #0: loss = 0.000798365 (* 1 = 0.000798365 loss)
+I0218 08:59:27.880091   246 sgd_solver.cpp:106] Iteration 19900, lr = 0.00439791
+I0218 09:00:30.494895   246 solver.cpp:454] Snapshotting to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_20000.caffemodel
+I0218 09:00:30.499994   246 sgd_solver.cpp:273] Snapshotting solver state to binary proto file /workspace/parkingclassifier-caffe/lenet32x40_3_ive_20200218_iter_20000.solverstate
+I0218 09:00:30.738251   246 solver.cpp:317] Iteration 20000, loss = 0.00205495
+I0218 09:00:30.738293   246 solver.cpp:337] Iteration 20000, Testing net (#0)
+I0218 09:01:07.561590   246 solver.cpp:404]     Test net output #0: accuracy = 0.9915
+I0218 09:01:07.561658   246 solver.cpp:404]     Test net output #1: loss = 0.0382526 (* 1 = 0.0382526 loss)
+I0218 09:01:07.561666   246 solver.cpp:322] Optimization Done.
+I0218 09:01:07.561668   246 caffe.cpp:254] Optimization Done.
