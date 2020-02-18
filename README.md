@@ -1,3 +1,7 @@
+![](./accloss_images/SVG_LOGO_Figure_2line_Small.jpg)
+
+[SMARTVISION GLOBAL](https://svisionglobal.com)
+
 # parkingclassifier-caffe
 Produced files (components) from caffe-related training data
 and it can be used inside the Caffe
