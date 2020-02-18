@@ -32,9 +32,9 @@ and it can be used inside the Caffe
 - lenet32x40_3 : 20191221 6 phase all data(46000 each class) including augmented data (contrast: 0.2, sat: 0.2, hue: 0.2 with data_split): acc: 99.5
 - lenet32x40_3 : 20191228 6 phase all data(46000 each class) including augmented data (brightness: 0.4, sat: 0.2, hue: 0.2 with data_split): acc: 99.75
 - lenet32x40_3 : 20200202 6 phase all data(46000 each class) including augmented data (brightness: 0.4, cont: 0.4 sat: 0.4, hue: 0.2 with data_split): acc: 99.61  at 19000 iters )
-![Accuracy/Loss Graph](./accloss_images/caffe-log-plot-20200202-br-ct-sat_0.4_Test.png)
+![Acc/Loss Graph](./accloss_images/caffe-log-plot-20200202-br-ct-sat_0.4_Test.png){: width="10" height="10"}
 - lenet32x40_3 : 20200217 6 phase aug data(23000 each class) including augmented data (brightness: 0.4, cont: 0.4 sat: 0.4, hue: 0.2 with data_split): acc: 99.26  at 18500 iters )
-![Accuracy/Loss Graph](./accloss_images/caffe-log-plot-20200217-br-ctr-sat_040_only.png) 
+![Acc/Loss Graph](./accloss_images/caffe-log-plot-20200217-br-ctr-sat_040_only.png){: width="10" height="10"}
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
@@ -72,6 +72,7 @@ Using docker
 - 3.1 However, for the purpose of drawing the Accuracy/Loss graph, it does not matter.
 
 # Fine-Tuning
+##### Method 1
     https://hamait.tistory.com/520 
     https://medium.com/@alexrachnog/using-caffe-with-your-own-dataset-b0ade5d71233
 
@@ -79,3 +80,7 @@ Using docker
 1. prototxt: insert parameter with lr_mult with higher score after rename the name of proper Layer (lr_mult = 0 in other layers no to be updated)
 2. then the Layer will be trained quckly while previous trained model changes gradually according to base_lr
 3. stepsize in solver will be reduced to small
+##### Method 2
+0. same procedures as normal training except for using -weight options
+> In caffe, ./build/tools/caffe train -solver /.../xxx_solover.prototxt -weights /.../xxx_iter_2500.caffemodel 2>&1 | tee /.../your_name.log
+
