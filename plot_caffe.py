@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 TrainTestBoth = False
-FileName = 'caffe-log-plot-20200218-br-ctr-sat_080_fine'
-dirPath = './20200218_data'
-logFileName = 'train_20200218_br_ctr_sat_080_fine'
+FileName = 'caffe-log-plot-20200219-br-ctr-sat_060_fine_10000'
+dirPath = './20200219_data'
+logFileName = 'train_20200219_br_ctr_sat_060_fine_10000'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
@@ -25,7 +25,20 @@ else:
     train_log = pd.read_csv(str(outFile + ".log.test")) # when test only exists, train_log == test_log
     test_log = pd.read_csv(str(outFile + ".log.test"))
 
-_, ax1 = plt.subplots(figsize=(15, 10))
+import numpy as np
+log_num = list(train_log["NumIters"])
+log_acc = list(train_log["accuracy"])
+idx = np.argmax(log_acc)
+txtstr = 'max acc: {} at {} with idx {}'.format(log_acc[idx],int(log_num[idx]), idx)
+print(txtstr)
+fig, ax1 = plt.subplots(figsize=(15, 10))
+
+#put text in the figure
+size = fig.get_size_inches()*fig.dpi # plot size in pixels
+center = size/2 # center pixel
+print(center)
+fig.text((center[0]/1500),(center[1]/1000),txtstr, fontsize=15)  # (x,y) normalized ratio
+                                                    # can be fig.text((0.5),(0.5),txtstr)
 ax2 = ax1.twinx()
 plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')
 plot1, = ax1.plot(train_log["NumIters"], train_log["loss"], alpha=0.4)
@@ -39,8 +52,3 @@ plt.legend([plot0, plot1, plot2, plot3], ['Train Acc', 'Train loss', 'Test Acc',
 
 plt.savefig('{}.png'.format(FileName))
 plt.show()
-import numpy as np
-log_num = list(train_log["NumIters"])
-log_acc = list(train_log["accuracy"])
-idx = np.argmax(log_acc)
-print('max accuray {} at {} with idx {}'.format(log_acc[idx],int(log_num[idx]), idx))
