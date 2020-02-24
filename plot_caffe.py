@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 TrainTestBoth = False
-FileName = 'caffe-log-plot-20200220-br-ctr-sat_060_18500'
-dirPath = './20200219_data'
-logFileName = 'train_20200220_br_ctr_sat_060_18500'
+FileName = 'train_20200223_4phase_04_06_bronly'
+dirPath = './20200223_data'
+logFileName = 'train_20200223_4phase_04_06_bronly'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
@@ -25,12 +25,18 @@ else:
     train_log = pd.read_csv(str(outFile + ".log.test")) # when test only exists, train_log == test_log
     test_log = pd.read_csv(str(outFile + ".log.test"))
 
+# search max acc
 import numpy as np
-log_num = list(train_log["NumIters"])
-log_acc = list(train_log["accuracy"])
+log_num, log_acc = list(train_log["NumIters"]), list(train_log["accuracy"])
 idx = np.argmax(log_acc)
-txtstr = 'max acc: {} at {} with idx {}'.format(log_acc[idx],int(log_num[idx]), idx)
+txtstr = 'Train log max acc: {} at {} with idx {}\n '.format(log_acc[idx],int(log_num[idx]), idx)
 print(txtstr)
+log_num, log_acc = list(test_log["NumIters"]), list(test_log["accuracy"])
+idx = np.argmax(log_acc)
+txtstr = 'Test log max acc: {} at {} with idx {}\n'.format(log_acc[idx],int(log_num[idx]), idx)
+print(txtstr)
+
+
 fig, ax1 = plt.subplots(figsize=(15, 10))
 
 #put text in the figure
