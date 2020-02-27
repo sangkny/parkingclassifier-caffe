@@ -34,7 +34,8 @@ and it can be used inside the Caffe
 - 20200220-1: 20200217 pretrained + reweights method 1+2 (base_lr: 0.01->0.001 from 0 iteration) **best**
 - 20200221: 2020217 with o.6 br only in normal processing (base_lr: 0.01) (max acc: 0.9957 at 27000 with idx 54) **best**
 - 20200223: changes settings for 4 phase parking with previous parking(haar trained except "vehicles") data sets (max acc: 0.9994 at 13500 with idx 27)
-- 20200223-1: both test and train graph
+- 20200223-1: both test and train graph (tests with real 4phase data resulted in 34% accurach)
+- 20200224: combined with 1500 4phase data with 2020223 dataset
 
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -68,7 +69,9 @@ and it can be used inside the Caffe
 - lenet32x40_3 : 20200221, 20200217 data with 0.6 br changes only (noral approach with 46000 samples : max acc: 0.9957 at 27000 with idx 54) **Best**
   - 밝기만 0.6으로 변동시킨 후 모든셋팅을 0.2로 놓았던 셋팅과 합한 데이터셋에 대한 결과가 제일 좋아 보임
 ![acc/loss](./train_20200221_br_ctr_sat_040_plus_br_060_only.png)
-- lenet32x40_3 : 20200223, new for 4 phase parking status (99.94% at 13500 iteration)
+- lenet32x40_3 : 20200223, new for 4 phase parking status (99.94% at 13500 iteration) -> test with real 4phase data, its result was only 34% accuracy
+![acc/loss](./train_20200223_4phase_04_06_bronly_bothtt.png)
+- lenet32x30_3 : 20200224, put 1500 data into 2020023 dataset and test until 20000 iteration
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
