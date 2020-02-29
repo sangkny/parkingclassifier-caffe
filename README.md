@@ -77,10 +77,12 @@ and it can be used inside the Caffe
 [x] From here, the test will be for 4 phase case
 - lenet32x40_3 : 20200223, new for 4 phase parking status (99.94% at 13500 iteration) -> test with real 4phase data, its result was only 34% accuracy
 ![acc/loss](./train_20200223_4phase_04_06_bronly_bothtt.png)
-- lenet32x30_3 : 20200224, put 1500 data into 2020023 dataset and test until 20000 iteration
-- lenet32x30_3 : 20200228, put 6900 data into 2020023 dataset and test until 20000 iteration (haar set: select same #s for 0, and 4phase set:6900 data augmented to 0.2, 0.4, 0.6bry only settings -> 99.9% at 15000)
+- lenet32x40_3 : 20200224, put 1500 data into 2020023 dataset and test until 20000 iteration
+- lenet32x40_3 : 20200228, put 6900 data into 2020023 dataset and test until 20000 iteration (haar set: select same #s for 0, and 4phase set:6900 data augmented to 0.2, 0.4, 0.6bry only settings -> 99.9% at 15000)
  - 이경우 특이한 케이스는 일단 빼고 훈련을 시켰음. 
- - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임. 
+ - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임.
+ ![acc/loss](./train_20200228_haar_base_plus_phase4_02_04_06bronly.png)  
+- lenet32x40_3 : same as 20200228, this time tried to solve early saturation with learning rate adjustment with 0.005 from 0.01
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
