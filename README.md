@@ -33,9 +33,12 @@ and it can be used inside the Caffe
 - 20200220: 2020217 pretrained + reweights method 3 (base_lr: 0.01->0.001 with 20200217_iter_18500 + resuming from 18500 to 30000),
 - 20200220-1: 20200217 pretrained + reweights method 1+2 (base_lr: 0.01->0.001 from 0 iteration) **best**
 - 20200221: 2020217 with o.6 br only in normal processing (base_lr: 0.01) (max acc: 0.9957 at 27000 with idx 54) **best**
+
+[x] From here, the test will be for 4 phase case
 - 20200223: changes settings for 4 phase parking with previous parking(haar trained except "vehicles") data sets (max acc: 0.9994 at 13500 with idx 27)
-- 20200223-1: both test and train graph (tests with real 4phase data resulted in 34% accurach)
+- 20200223-1: both test and train graph (tests with real 4phase data resulted in 34% accuracy)
 - 20200224: combined with 1500 4phase data with 2020223 dataset
+- 20200228: haar (0/1 adjustment, 0.2 only) dataset + **6900 4phase dataset (0.2, 0.4, 0.6 br only)** (99.9 % at 15000 : delievery to VPD_Models_4Phase) 
 
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -65,13 +68,19 @@ and it can be used inside the Caffe
 - lenet32x40_3 : 20200219-2 -> 20200217 -> 20200219 -> 30000 iters (pretrained + 0.6 version)  (base_lr : 0.01 -> 0.001) : 99.33 at 19500 **almost same as previous settings**
 - lenet32x40_3 : 20200220, 20200217 best pretrained + 0.6 version resumption approach from 20200217 18500 **no difference**
 - lenet32x40_3 : 20200220-1, 20200217 best pretrained + 0.6 version reweights approach from 0 iteration (base_lr:0.01->0.001) 
-  - 20200218 results were worse than before, 20200219/20 produced similar results. 20200220-1 gives **still best** (lenet32x40_3_ive_20200220_resume_iter_30000.caffemodel)
-- lenet32x40_3 : 20200221, 20200217 data with 0.6 br changes only (noral approach with 46000 samples : max acc: 0.9957 at 27000 with idx 54) **Best**
-  - 밝기만 0.6으로 변동시킨 후 모든셋팅을 0.2로 놓았던 셋팅과 합한 데이터셋에 대한 결과가 제일 좋아 보임
+  - 20200218 results were worse than before, 20200219/20 produced similar results. 20200220-1 gives **still best** (lenet32x40_3_ive_20200220_resume_iter_30000.caffemodel) [o]
+- lenet32x40_3 : 20200221, 20200217 data with 0.6 br changes only (normal approach with 46000 samples : max acc: 0.9957 at 27000 with idx 54) 
+  - 밝기만 0.6으로 변동시킨 후 모든셋팅을 0.2로 놓았던 셋팅과 합한 데이터셋에 대한 결과가 제일 좋아 보였으나, 하지만 바닥에 장애인, 여성전용, VIP 등과 같은 지시문이 있는 경우에 잘 안됨.
+  - 결과적으로 pretrained 를 하고 specific 하게 finetuning 하는 것이 가장 좋음 (20200220 30000 best so far).  
 ![acc/loss](./train_20200221_br_ctr_sat_040_plus_br_060_only.png)
+
+[x] From here, the test will be for 4 phase case
 - lenet32x40_3 : 20200223, new for 4 phase parking status (99.94% at 13500 iteration) -> test with real 4phase data, its result was only 34% accuracy
 ![acc/loss](./train_20200223_4phase_04_06_bronly_bothtt.png)
 - lenet32x30_3 : 20200224, put 1500 data into 2020023 dataset and test until 20000 iteration
+- lenet32x30_3 : 20200228, put 6900 data into 2020023 dataset and test until 20000 iteration (haar set: select same #s for 0, and 4phase set:6900 data augmented to 0.2, 0.4, 0.6bry only settings -> 99.9% at 15000)
+ - 이경우 특이한 케이스는 일단 빼고 훈련을 시켰음. 
+ - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임. 
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
