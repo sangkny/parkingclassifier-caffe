@@ -37,7 +37,7 @@ and it can be used inside the Caffe
 [x] From here, the test will be for 4 phase case
 - 20200223: changes settings for 4 phase parking with previous parking(haar trained except "vehicles") data sets (max acc: 0.9994 at 13500 with idx 27)
 - 20200223-1: both test and train graph (tests with real 4phase data resulted in 34% accuracy)
-- 20200224: combined with 1500 4phase data with 2020223 dataset
+- 20200224: combined with 1500 4phase data with 2020223 dataset (99.9% but stress test is not good compared to the below)
 - 20200228: haar (0/1 adjustment, 0.2 only) dataset + **6900 4phase dataset (0.2, 0.4, 0.6 br only)** (99.9 % at 15000 : delievery to VPD_Models_4Phase) 
 
 # Procedure 
@@ -82,7 +82,7 @@ and it can be used inside the Caffe
  - 이경우 특이한 케이스는 일단 빼고 훈련을 시켰음. 
  - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임.
  ![acc/loss](./train_20200228_haar_base_plus_phase4_02_04_06bronly.png)  
-- lenet32x40_3 : same as 20200228, this time tried to solve early saturation with learning rate adjustment with 0.005 from 0.01
+- lenet32x40_3 : same as 20200228, this time tried to solve early saturation with **learning rate adjustment with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test)
 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
