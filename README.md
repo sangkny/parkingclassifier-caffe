@@ -39,7 +39,9 @@ and it can be used inside the Caffe
 - 20200223-1: both test and train graph (tests with real 4phase data resulted in 34% accuracy)
 - 20200224: combined with 1500 4phase data with 2020223 dataset (99.9% but stress test is not good compared to the below)
 - 20200228: haar (0/1 adjustment, 0.2 only) dataset + **6900 4phase dataset (0.2, 0.4, 0.6 br only)** (99.9 % at 15000 : delievery to VPD_Models_4Phase) 
-
+- 20200302: test with fine-tuning (lr=0.005) on the new data 0302.zip gives 100% /0/ 99.8% /1/.  
+- 20200307: fine tuning method 1+2 (lr=0.001) from 20200302 weights, exactly same settings with 20200228 but with new data (13000 images) for 4phase.
+  
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
 1. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/)
@@ -82,8 +84,8 @@ and it can be used inside the Caffe
  - 이경우 특이한 케이스는 일단 빼고 훈련을 시켰음. 
  - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임.
  ![acc/loss](./train_20200228_haar_base_plus_phase4_02_04_06bronly.png)  
-- lenet32x40_3 : same as 20200228, this time tried to solve early saturation with **learning rate adjustment with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test)
-
+- lenet32x40_3 : 20200302, same as 20200228, this time tried to solve early saturation with **learning rate adjustment with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test)
+- lenet32x40_3 : 20200307 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) with the same settings with 20200228, 
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
 # Solver
