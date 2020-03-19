@@ -40,8 +40,10 @@ and it can be used inside the Caffe
 - 20200224: combined with 1500 4phase data with 2020223 dataset (99.9% but stress test is not good compared to the below)
 - 20200228: haar (0/1 adjustment, 0.2 only) dataset + **6900 4phase dataset (0.2, 0.4, 0.6 br only)** (99.9 % at 15000 : delievery to VPD_Models_4Phase) 
 - 20200302: test with fine-tuning (lr=0.005) on the new data 0302.zip gives 100% /0/ 99.8% /1/.  
-- 20200307: fine tuning method 1+2 (lr=0.001) from 20200302 weights, exactly same settings with 20200228 but with new data (13000 images) for 4phase, results in  99.98% at 23500.
-_ 20200318: fine turning method 1+2 (lr=0.001) with only incorrect_all data after augmentation 0.2, 0. 4, 0.6, and horizflip and affine
+- 20200307: fine tuning method 1+2 (lr=0.001) from 20200302 weights, exactly same settings with 20200228 but with new data (13000 images) for 4phase, results in  99.98% at 23500.(**still best**)
+- 20200318: fine tuning method 1+2 (lr=0.001), **from 20200307 at 23500 weights**, with only **incorrect_all data** after augmentation 0.1, 0.2, 0. 4, 0.6, 0.7 and horizflip and affine (0.03). 
+    - however, its effect was not good as described in the description section. Therefore, in 20200318-1, go with 20200302 settings with new dasta (upto 20200317 ): fine-tunning 
+-20200318-1: fine tuning method 1+2 from weights 20200228 (testonly_iter_15000.caffemodel) (same as 20200302 with 23000 new data, which augments 0.2, 0.4, 0.6 brightness and affine changes)   
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -87,7 +89,10 @@ _ 20200318: fine turning method 1+2 (lr=0.001) with only incorrect_all data afte
  ![acc/loss](./train_20200228_haar_base_plus_phase4_02_04_06bronly.png)  
 - lenet32x40_3 : 20200302, same as 20200228, this time tried to solve early saturation with **learning rate adjustment with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test)
 - lenet32x40_3 : 20200307 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) with the same settings with 20200228, results in 99.98 at 23500 ( **best** keep testing)
-- lenet32x40_3 : 20200318 version, fine-tuning method (1+2) (lr=0.001)
+- lenet32x40_3 : 20200318 version, fine-tuning method (1+2) (lr=0.001) from 20200307 (at 23500 weights) with using only incorrect data after augmenting 0.1 0.2 0.4 0.6 0.7 brightness adjustment and random horizontal flip and affine (0.03)
+ - 위의 경우는 20200307 weight에 같은 조건으로 incorrect 데이터만을 다양하게 augment 시킨 후 fine-tuning을 한것으로 쉽게 500 iteration 후에 99.% 이상의 test acc 가 되어 overfitting 또는 전결과와 다르지 않음을 예단 하였고, 역시 실험을 해 보니 전 버전보다 0(nonobject)의 경우는 0.1% 좋아졌으나 
+ 1(object) 경우는 1% 가까이 성능이 떨어짐. 결론은 20200302 weights (20200228_iter_testonly_lr0005 version) 에 fine tuning on (4phase data up to now) 로 재 테스트 시도해 보겠음.   
+- lenet32x40_3 : 20200318-1 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) that is _20200228_4phase_testonly_lr0005_
  
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
