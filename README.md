@@ -41,11 +41,12 @@ and it can be used inside the Caffe
 - 20200228: haar (0/1 adjustment, 0.2 only) dataset + **6900 4phase dataset (0.2, 0.4, 0.6 br only)** (99.9 % at 15000 : delievery to VPD_Models_4Phase) 
 - 20200302: test with fine-tuning (lr=0.005) on the new data 0302.zip gives 100% /0/ 99.8% /1/.  
 - 20200307: fine tuning method 1+2 (lr=0.001) from 20200302 weights, exactly same settings with 20200228 but with new data (13000 images) for 4phase, results in  99.98% at 23500.(**still best**)
-- 20200318: fine tuning method 1+2 (lr=0.001), **from 20200307 at 23500 weights**, with only **incorrect_all data** after augmentation 0.1, 0.2, 0. 4, 0.6, 0.7 and horizflip and affine (0.03). 
-    - however, its effect was not good as described in the description section. Therefore, in 20200318-1, go with 20200302 settings with new dasta (upto 20200317 ): fine-tunning
-     
--20200318-v1: fine tuning method 1+2 from weights 20200302 (testonly_iter_lr0005_15000.caffemodel) (same as 20200302 with 23000 new data, which augments 0.2, 0.4, 0.6 brightness and affine changes)
-    - first try with only new data exclude haar, while 20200307 version included haar dataset    
+- 20200318: fine tuning method 1+2 (lr=0.001), **from 20200307 at 23500 weights**, with only **incorrect_all data** after augmentation 0.1, 0.2, 0. 4, 0.6, 0.7 and horizonflip and affine (0.03). 
+    - however, its effect was not good as described in the description section. Therefore, in 20200318-1, go with 20200302 settings with new dasta (upto 20200317 ): fine-tunning     
+    - 20200318-v1: fine-tuning method 1+2 from weights 20200302 (testonly_iter_lr0005_15000.caffemodel) (same as 20200302 with 23000 new data, which augments 0.2, 0.4, 0.6 brightness and affine changes)
+    - first try with only new data exclude haar, while 20200307 version included haar dataset
+    - 20200318-v2: fine-tuning with haar+newdata augmentation, resulted in bad 0 object detection    
+    - 20200318-v3: training haar+new data from a scratch. 99.82% at 28000 <<**best performance**>>
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -89,13 +90,23 @@ and it can be used inside the Caffe
  - 이경우 특이한 케이스는 일단 빼고 훈련을 시켰음. 
  - /1/ 99.9%, /0/ 99%로 /0/의 경우 실제 데이터가 더 필요한 상황임.
  ![acc/loss](./train_20200228_haar_base_plus_phase4_02_04_06bronly.png)  
-- lenet32x40_3 : 20200302, same as 20200228, this time tried to solve early saturation with **learning rate adjustment with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test)
-- lenet32x40_3 : 20200307 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) with the same settings with 20200228, results in 99.98 at 23500 ( **best** keep testing)
+- lenet32x40_3 : 20200302, same as 20200228, this time tried to solve early saturation with **learning rate adjustment 
+with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from stress test as of today)
+- lenet32x40_3 : 20200307 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) with the same settings with 20200228, results in 99.98 at 23500 
 - lenet32x40_3 : 20200318 version, fine-tuning method (1+2) (lr=0.001) from 20200307 (at 23500 weights) with using only incorrect data after augmenting 0.1 0.2 0.4 0.6 0.7 brightness adjustment and random horizontal flip and affine (0.03)
- - 위의 경우는 20200307 weight에 같은 조건으로 incorrect 데이터만을 다양하게 augment 시킨 후 fine-tuning을 한것으로 쉽게 500 iteration 후에 99.% 이상의 test acc 가 되어 overfitting 또는 전결과와 다르지 않음을 예단 하였고, 역시 실험을 해 보니 전 버전보다 0(nonobject)의 경우는 0.1% 좋아졌으나 
- 1(object) 경우는 1% 가까이 성능이 떨어짐. 결론은 20200302 weights (20200228_iter_testonly_lr0005 version) 에 fine tuning on (4phase data up to now) 로 재 테스트 시도해 보겠음.
-    
-- lenet32x40_3 : 20200318-v1 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) that is _20200228_4phase_testonly_lr0005_일단 Haar 빼고 (20200307 version included haar data)
+    ![](./train_20200318_fine_lr0001_incorrect.png)
+ - 위의 경우는 20200307 weight에 같은 조건으로 **incorrect** 데이터만을 다양하게 augment 시킨 후 
+ fine-tuning을 한것으로 쉽게 500 iteration 후에 99.% 이상의 test acc 가 되어 overfitting 또는 전결과와 다르지 않음을 예단 하였고, 
+ 역시 실험을 해 보니 성능이 상대적으로  떨어짐. 그래서, 정리를 하면 incorrect data 만을 가지고 fine-tuning 하는 것은 데이터가 많지않으면 효과 별로임.
+ 다음과 같이 실험을 20200318을 3 version으로 정리함. **The best training result comes from training with all the data from a scratch**, which is _version 3_.     
+- lenet32x40_3 : _erformance_report.xlsx_ 참조 
+    - 20200318-v1 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) that is _20200228_4phase_testonly_lr0005_ 
+    일단 Haar 빼고 (20200307 version included haar data), with new data, 0: 99.9% 1: 99.4 % 0 데이터에 에러를 많이 줄임, 반면에 1 데이터는 에러가 상대적으로 큼.
+    - v2 version, fine-tuning method (1+2) (lr=0.001), on haar + new data for fine-tuning **합하여 진행**, 0: 99.6 1: 99.9% 로 1에 대해 성능이 좋음.
+    ![](./train_20200318_fine_lr0001_v2.png)
+    - v3 version, no fine-tuning, train from a scratch with lr=0.001, 0:99.88, 1:99.79% 로 상대적으로 0/1 모두 양호함. **BEST SO FAR**   
+    ![](./train_20200318_lr0001_v3.png)
+  
  
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
