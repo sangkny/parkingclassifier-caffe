@@ -12,8 +12,8 @@ layer {
 	mirror: true		
   }
   data_param {
-    source: "/workspace/parkingclassifier-caffe/20200202_data/20200202_data_train_lmdb"
-    batch_size: 64
+    source: "/workspace/parkingclassifier-caffe/20200318_data/20200318_data_train_lmdb"
+    batch_size: 128
     backend: LMDB
   }
 }
@@ -30,7 +30,7 @@ layer {
 	mirror: true		
   }
   data_param {
-    source: "/workspace/parkingclassifier-caffe/20200202_data/20200202_data_test_lmdb"
+    source: "/workspace/parkingclassifier-caffe/20200318_data/20200318_data_test_lmdb"
     batch_size: 100
     backend: LMDB
   }

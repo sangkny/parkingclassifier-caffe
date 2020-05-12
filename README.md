@@ -47,7 +47,7 @@ and it can be used inside the Caffe
     - first try with only new data exclude haar, while 20200307 version included haar dataset
     - 20200318-v2: fine-tuning with haar+newdata augmentation, resulted in bad 0 object detection    
     - 20200318-v3: training haar+new data from a scratch. 99.82% at 28000 <<**best performance**>>
-- 20200427: 
+- 20200512: 
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -107,7 +107,10 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
     ![](./train_20200318_fine_lr0001_v2.png)
     - v3 version, no fine-tuning, train from a scratch with lr=0.001, 0:99.88, 1:99.79% 로 상대적으로 0/1 모두 양호함. **BEST SO FAR**   
     ![](./train_20200318_lr0001_v3.png)
-  
+ 
+- lenet32x40_3 : dataset 중 쓰이지 않았던 3/18,19,20을 합하여 3/18 folder에 넣어서 augmentation 을 한 후 기존의 200328 데이터와 합하여 0.001로 scrath부터 training 예정
+    - 200318_data 와 이름만 같을 뿐 0318_data_only 와 200318_data가 합쳐진 형태이다.  
+    - batchsize (64->128)     
  
 # Model file confirmation for the given system
 1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
