@@ -47,6 +47,7 @@ and it can be used inside the Caffe
     - first try with only new data exclude haar, while 20200307 version included haar dataset
     - 20200318-v2: fine-tuning with haar+newdata augmentation, resulted in bad 0 object detection    
     - 20200318-v3: training haar+new data from a scratch. 99.82% at 28000 <<**best performance**>>
+- 20200427: 
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -99,7 +100,7 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
  fine-tuning을 한것으로 쉽게 500 iteration 후에 99.% 이상의 test acc 가 되어 overfitting 또는 전결과와 다르지 않음을 예단 하였고, 
  역시 실험을 해 보니 성능이 상대적으로  떨어짐. 그래서, 정리를 하면 incorrect data 만을 가지고 fine-tuning 하는 것은 데이터가 많지않으면 효과 별로임.
  다음과 같이 실험을 20200318을 3 version으로 정리함. **The best training result comes from training with all the data from a scratch**, which is _version 3_.     
-- lenet32x40_3 : _erformance_report.xlsx_ 참조 
+- lenet32x40_3 : _performance_report.xlsx_ 참조 
     - 20200318-v1 version, fine-tuning method (1+2) (lr=0.001) from 20200302 (lr=0.005) that is _20200228_4phase_testonly_lr0005_ 
     일단 Haar 빼고 (20200307 version included haar data), with new data, 0: 99.9% 1: 99.4 % 0 데이터에 에러를 많이 줄임, 반면에 1 데이터는 에러가 상대적으로 큼.
     - v2 version, fine-tuning method (1+2) (lr=0.001), on haar + new data for fine-tuning **합하여 진행**, 0: 99.6 1: 99.9% 로 1에 대해 성능이 좋음.
