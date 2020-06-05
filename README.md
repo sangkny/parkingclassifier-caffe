@@ -48,6 +48,7 @@ and it can be used inside the Caffe
     - 20200318-v2: fine-tuning with haar+newdata augmentation, resulted in bad 0 object detection    
     - 20200318-v3: training haar+new data from a scratch. 99.82% at 28000 <<**best performance**>>
 - 20200512: 
+- 20200604: up to now, i was wrong for width x height assignment in CNN model on chip, so I will fix it now with 20200512 data
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -108,12 +109,24 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
     - v3 version, no fine-tuning, train from a scratch with lr=0.001, 0:99.88, 1:99.79% 로 상대적으로 0/1 모두 양호함. **BEST SO FAR**   
     ![](./train_20200318_lr0001_v3.png)
  
-- lenet32x40_3 : dataset 중 쓰이지 않았던 3/18,19,20을 합하여 3/18 folder에 넣어서 augmentation 을 한 후 기존의 200328 데이터와 합하여 0.001로 scrath부터 training 예정
+- lenet32x40_3 : 20200512 version dataset 중 쓰이지 않았던 3/18,19,20을 합하여 3/18 folder에 넣어서 augmentation 을 한 후 기존의 200328 데이터와 합하여 0.001로 scrath부터 training 예정
     - 200318_data 와 이름만 같을 뿐 0318_data_only 와 200318_data가 합쳐진 형태이다.  
     - batchsize (64->128)     
+    - 11 hours (2020/05/12/18:21 - 2020/05/13/05:12)
+    - Test log max acc: 0.9984 at 28000 with idx 56
+    ![20200512 version](./train_20200512_lr0001_v3.png)
+- lenet32x40_3 : 20200604 가로x세로 (32x40)으로 수정하여 다시 트레이닝... 전에는 40x32 이었음. 카메라 칩속에서 세로가 긴 32x40 밖에 안됨
+    - 모든 조건은 동일하며 create_pk_test file에서만 가로 세로 사이즈 수정하고, bin conversion 시에 width height channels 순으로 하면 됨    
+    - Test log max acc: 0.9979 at 24000 with idx 48
+    ![20200604 40x32 version](./train_20200604_40x32_lr0001_v3.png)   
+    - 20200605 lenet40x32_3_ive_20200512_4phase_lr0001_v3_iter_24000.caffemodel -> lenet40x32_3_ive_20200604_4phase_lr0001_v3_iter_24000.bin 으로 delivery
+    - command
+    ```angular2html
+    ./build/tools/ive_tool_caffe 1 32 40 1 /workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt /workspace/parkingclassifier-caffe/lenet40x32_3_ive_2020512_4phase_lr0001_v3_iter_24000.caffemodel /workspace/parkingclassifier-caffe/lenet40x32_3_ive_20200606_4phase_lr0001_v3_iter_24000.bin
+```
  
 # Model file confirmation for the given system
-1. ./build/tools/ive_tool_caffe 0 h w ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt 
+1. ./build/tools/ive_tool_caffe 0 w h ch /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt (was wrong with 0 h w ch)
 # Solver
 _xxx_solver.prototxt
 
@@ -128,7 +141,9 @@ _xxx_solver.prototxt
 
 
 # Converting to binary for the company
-1. ./build/tools/ive_tool_caffe 1 h w ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
+1. ./build/tools/ive_tool_caffe 1 w h ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
+	/workspace/parkingclassifier-caffe/lenet32x40_2.caffemodel /workspace/parkingclassifier-caffe/lenet32x40_2.bin
+1-1. (was incorrect) ./build/tools/ive_tool_caffe 1 h w ch (channel: 3 for color) /workspace/parkingclassifier-caffe/lenet32x40_2.prototxt \
 	/workspace/parkingclassifier-caffe/lenet32x40_2.caffemodel /workspace/parkingclassifier-caffe/lenet32x40_2.bin
 2. ** important ** To convert ive-caffe in a success into a bin file, the prototxt 	should include TEST only in accuracy layer at the last part. 
 - 2.1 However, to make log and draw the accuracy graphs for TRAIN/TEST phases, the last accuracy layer should include both.

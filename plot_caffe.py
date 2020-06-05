@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 IsPlotSave = True
 TrainTestBoth = False
-FileName = 'train_20200318_lr0001_v3'
+FileName = 'train_20200604_40x32_lr0001_v3'
 dirPath = './20200318_data'
-logFileName = 'train_20200318_lr0001_v3'
+logFileName = 'train_20200604_40x32_lr0001_v3'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log

@@ -21,6 +21,6 @@ display: 100
 max_iter:30000
 # snapshot intermediate results
 snapshot: 500
-snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet32x40_3_ive_2020318_4phase_lr0001_v3"
+snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet40x32_3_ive_2020512_4phase_lr0001_v3"
 # solver mode: CPU or GPU
 solver_mode: CPU 
