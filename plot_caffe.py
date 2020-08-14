@@ -13,10 +13,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 IsPlotSave = True
-TrainTestBoth = False
-FileName = 'train_20200604_40x32_lr0001_v3'
-dirPath = './20200318_data'
-logFileName = 'train_20200604_40x32_lr0001_v3'
+TrainTestBoth = True
+FileName = 'train_20200812_40x32_lr0001_v3_30000_3chs_br04'
+dirPath = './20200812_3chs_data_br04'
+logFileName = 'train_20200812_40x32_lr0001_v3_30000_3chs_br04'
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
@@ -27,10 +27,14 @@ else:
 
 # search max acc
 import numpy as np
-log_num, log_acc = list(train_log["NumIters"]), list(train_log["accuracy"])
-idx = np.argmax(log_acc)
-txtstr = 'Train log max acc: {} at {} with idx {}\n '.format(log_acc[idx],int(log_num[idx]), idx)
-print(txtstr)
+if(train_log.get('accuracy') is None):
+    print('Train accuracy does not exist')
+else:
+    log_num, log_acc = list(train_log["NumIters"]), list(train_log["accuracy"])
+    idx = np.argmax(log_acc)
+    txtstr = 'Train log max acc: {} at {} with idx {}\n '.format(log_acc[idx],int(log_num[idx]), idx)
+    print(txtstr)
+
 log_num, log_acc = list(test_log["NumIters"]), list(test_log["accuracy"])
 idx = np.argmax(log_acc)
 txtstr = 'Test log max acc: {} at {} with idx {}\n'.format(log_acc[idx],int(log_num[idx]), idx)
@@ -46,7 +50,10 @@ print(center)
 fig.text((center[0]/1500),(center[1]/1000),txtstr, fontsize=15)  # (x,y) normalized ratio
                                                     # can be fig.text((0.5),(0.5),txtstr)
 ax2 = ax1.twinx()
-plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')
+if train_log.get('accuracy') is None:
+    plot0, = ax1.plot(test_log["NumIters"], test_log["accuracy"], 'b') # replace
+else:
+    plot0, = ax1.plot(train_log["NumIters"], train_log["accuracy"], 'b')
 plot1, = ax1.plot(train_log["NumIters"], train_log["loss"], alpha=0.4)
 plot2, = ax1.plot(test_log["NumIters"], test_log["accuracy"], 'g.')
 plot3, = ax1.plot(test_log["NumIters"], test_log["loss"], 'r')

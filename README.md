@@ -12,6 +12,7 @@ and it can be used inside the Caffe
 1. Use `data_split.py` in parkingClassify repo. to split the given data into train and test sets with the predefined ratio.
     > from 6phase_augimg which has been combined with the above procedure.
 2. Follow the Procedure step. 
+3. Inference test with infer_caffe_with_pyTorch in pyTorch-caffe folder에__
 
 #### Update 
 - **20200218-20200219 experiments have similar results but best so far**
@@ -49,6 +50,25 @@ and it can be used inside the Caffe
     - 20200318-v3: training haar+new data from a scratch. 99.82% at 28000 <<**best performance**>>
 - 20200512: 
 - 20200604: up to now, i was wrong for width x height assignment in CNN model on chip, so I will fix it now with 20200512 data
+- 20200726: dropout try with LeNet32x40_3_ive.prototxt. However, it is not supported by HiSilicons
+- 20200729: data (20200318(all)+20200729_data) version -> 1, (pretrained version with 20200318_data + 2020o729_data_only)->2
+  * ver.1
+    *
+    
+  * ver.2
+    * 
+    
+- 20200731: data (20200318(all)+20200729_data) + noise (attention network )
+    - 99.74 at 56500 (refer to fingures)
+- 20200807: 20200729 data for 3channels 
+  * 3채널 입력이 가능하다고 하여 create_pk_class 에서 -gray=false (color) 로 하여 변경을 했더니 컬러로 만들어줬나보네^^
+  * 인위적으로 3channel로 만든것과 -gray=False 로 해서 만든것의 lmdb 사이즈 변화 거의 없고 성능도 그런 것 같음... 
+  * 우선 급한대로 gray를 가지고 training 중.. => 인위적으로 3channel로 일괄 변환 후 test 하여 40000 에서 최적(아래 그래프 참조)인것 같아 delivery 함.
+  * gray=> channel copy => 3 color 는 실제 데이터가 들어왔을 때 너무 에러가 많음..
+- 20200812: (../NexQuadDataSets/3channels) 1(haar)+0(20200811 취득된 2000여장의 실사)  를 이용해서 (0.4 0.2 0.2 0.2), (0.2, 0.1, 0.1, 0.1) (0.6, 0.4, 0.4, 0.4) 로 augmentation 한 데이터 (D:\sangkny\pyTest\MLDL\codes\parkingClassify-master\augimg_20200812_3channels_br04) 로 training
+  * Test log max acc: 0.9995 at 21000 with idx 42 
+ 
+ 
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -119,8 +139,40 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
     - 모든 조건은 동일하며 create_pk_test file에서만 가로 세로 사이즈 수정하고, bin conversion 시에 width height channels 순으로 하면 됨    
     - Test log max acc: 0.9979 at 24000 with idx 48
     ![20200604 40x32 version](./train_20200604_40x32_lr0001_v3.png)   
-    - 20200605 lenet40x32_3_ive_20200512_4phase_lr0001_v3_iter_24000.caffemodel -> lenet40x32_3_ive_20200604_4phase_lr0001_v3_iter_24000.bin 으로 delivery
-    - command
+    - 20200605 lenet40x32_3_ive_20200512_4phase_lr0001_v3_iter_24000.caffemodel -> lenet40x32_3_ive_20200604_4phase_lr0001_v3_iter_24000.bin 으로 delivery    
+ - lenet32x40_3 : 20200726 dropout을 사용하여 좋은 결과를 예상했으나 IVE 가 dropout을 지원하지 않음.
+    ![20200726 dropout version](./train_20200724_40x32_lr0001_v3_drop.png)
+    - 위의 결과와 거의 대동소이 함. 0.9984 at 30000 with idx 60 
+    
+ - lenet32x40_3 : dataset 에 backup with 20200318_data.zip. 작업은 /20200318_data 에서 함.  
+    * ver.1 :  20200729_data 에 20200318_data 와 20200729_40x32_data(real data) 를 합쳐서 training
+      * 결과는 나쁘지 않음. plot_caffe.py 를 적용했을 때 18500 (99.68)에서 도 좋지만 30000을 사용하니 더 좋은 결과가 얻어짐. => delivery
+      ![20200729_data](./train_20200729_40x32_lr0001_v3.png)
+      * 60000번까지 iteration 한후 기존 데이터와 training data 에 속하지 않은 18-19-20 data에서 거의 완벽에 가까운 성능이 나옴. => delivery 
+       
+      * attention 기능으로 data의 상부에 노이즈를 넣어서 실험을 해 봄 (99.59) at 26500. => 사용불가..  !!!    
+      * <20200731-noise> : 결과는 매우 안좋음
+        * 30000 iterations
+      ![20200731_data_noise 30000 iters](./train_20200731_40x32_lr0001_v3_noise.png)
+        * 60000 iterations (- Test log max acc: 0.9974 at 56500 with idx 53)
+      ![20200731_data_noise 60000 iters](./train_20200731_40x32_lr0001_v3_noise_60000.png)
+    
+    * ver.2 : 20200318_data 의 최종 모델을 참조하여 transfer learning with 20200729_40x32_data
+      * 예정
+ - lenet32x40_3 (3channels) : 20200807 2020729_data 와 같으나 채널만 3 채널
+    * 0.9971 at 23500 with idx 47    
+    * Test log max acc: 0.9984 at 51500 with idx 43
+    -- 이번엔 data를 직접 다 (8비트에서 24비트:3채널) 바꾼다음 앞서의 3채널과의 차이를 보기 위해 진행
+    * caffe는 -gray=False option에서 이것을 다 해 주는 것으로 생각되므로 굳이 8bit - 24bit으로 바꿀 필요는 없다.
+    * Test log max acc: 0.9981 at 40000 with idx 80 => 일단 이것으로 delivery 함 
+      ![20200807_20200729_data_3chs](./train_20200729_40x32_lr0001_v3_60000_3chs-2.png)
+ 
+ - lenet32x40_3 (3channels) : 20200812 20200729_data 에 모든 데이터 br04(augmentation)로 대체
+    * Test log max acc: 0.9995 at 21000 with idx 42
+    * 30000 번은 1에서는 훨씬 좋으나 0에서 많이 않좋아서 일단 21000으로 delivery
+      ![20200812_20200729_data_3chs](./train_20200812_40x32_lr0001_v3_30000_3chs_br04.png)
+    
+ - command
     ```angular2html
     ./build/tools/ive_tool_caffe 1 32 40 1 /workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt /workspace/parkingclassifier-caffe/lenet40x32_3_ive_2020512_4phase_lr0001_v3_iter_24000.caffemodel /workspace/parkingclassifier-caffe/lenet40x32_3_ive_20200606_4phase_lr0001_v3_iter_24000.bin
 ```
