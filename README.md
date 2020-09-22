@@ -7,6 +7,7 @@ Produced files (components) from caffe-related training data
 and it can be used inside the Caffe
 
 # Data Preparation
+0. Use 'deduplicate_data.py' in pytorch-caffe project to remove duplicated images
 0. Use `parking_aug_after_split.py` in parkingClassify repo. to augment the data with proper changes.
     > input_source : path\to\6phase_dataset ouput_images: ./augimg, then we need to combine original images and its augmented images (6phase_aug) for next step.
 1. Use `data_split.py` in parkingClassify repo. to split the given data into train and test sets with the predefined ratio.
@@ -67,8 +68,12 @@ and it can be used inside the Caffe
   * gray=> channel copy => 3 color 는 실제 데이터가 들어왔을 때 너무 에러가 많음..
 - 20200812: (../NexQuadDataSets/3channels) 1(haar)+0(20200811 취득된 2000여장의 실사)  를 이용해서 (0.4 0.2 0.2 0.2), (0.2, 0.1, 0.1, 0.1) (0.6, 0.4, 0.4, 0.4) 로 augmentation 한 데이터 (D:\sangkny\pyTest\MLDL\codes\parkingClassify-master\augimg_20200812_3channels_br04) 로 training
   * Test log max acc: 0.9995 at 21000 with idx 42 
- 
- 
+- 20200816: more convolution-> xxx-ive-4-xxx
+  * est log max acc: 0.9995 at 16500 with idx 33
+- 20200916:  SVG: more augmentations, HighGPH 20200826 + upto-20200912 only
+  * 자료는 SVG 서버에는 다양한 크고작은 데이터를 augmentation한 결과들을 가지고 하고, HighGpu 서버는 ip camera에서 취득되는 영상들만을 가지고 augmentation 하여 데이터 구성.
+  * batch 512 로 하는 것이 가장 잘 되는 것으로 판단됨.
+  * Test max acc/loss:0.9963/0.01377 at 165000 with idx 330 , Training Err:0.0304(b:512)
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -171,7 +176,18 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
     * Test log max acc: 0.9995 at 21000 with idx 42
     * 30000 번은 1에서는 훨씬 좋으나 0에서 많이 않좋아서 일단 21000으로 delivery
       ![20200812_20200729_data_3chs](./train_20200812_40x32_lr0001_v3_30000_3chs_br04.png)
-    
+    * 20200820 conv 와 같은 training set을 가지고 훈련하여 아래 _4와 어떤것이 더 낳은 결과를 낳는 지 보려고 한것.
+    * Test log max acc: 0.996 at 23500 with idx 47
+      ![20200820_20200817_data_3chs](./train_20200820_40x32_3_lr0001_v3_30000_3chs_br04.png)
+    * 60000 transfer learing 
+    * Test log max acc: 0.9965 at 47000 with idx 34
+      ![20200820_60000](./train_20200820_40x32_3_lr0001_v3_60000_3chs_br04.png)
+ - lenet32x40_4 (more convolution)   
+   * Test log max acc: 0.9995 at 16500 with idx 33
+     ![20200816_20200729_data_3chs](./train_20200816_40x32_lr0001_v3_30000_3chs_br04.png)
+   * Test log max acc : 0.9962 at 17000, but 30000 is better 
+     ![20200820_20200817_data_3chs](./train_20200820_40x32_lr0001_v3_30000_3chs_br04.png)
+     
  - command
     ```angular2html
     ./build/tools/ive_tool_caffe 1 32 40 1 /workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt /workspace/parkingclassifier-caffe/lenet40x32_3_ive_2020512_4phase_lr0001_v3_iter_24000.caffemodel /workspace/parkingclassifier-caffe/lenet40x32_3_ive_20200606_4phase_lr0001_v3_iter_24000.bin
@@ -184,7 +200,7 @@ _xxx_solver.prototxt
 
 # Training with log 
 0. in the caffe root
-1. ./build/tools/caffe train -solver /workspace/parkingclassifier-caffe/xxx_solover.prototxt 2>&1 | tee your_name.log
+1. ./build/tools/caffe train -gpu all -solver /workspace/parkingclassifier-caffe/xxx_solover.prototxt 2>&1 | tee your_name.log
 
 * 1-1. Saving the information to display the curve after training as follows:
 	GLOG_logtostderr=1 ./build/examples/train_net.bin solver.prototxt 2> caffe.log 
@@ -224,8 +240,8 @@ Using docker
 3. stepsize in solver will be reduced to small
 ##### Method 2
 0. same procedures as normal training except for using -weight options
-> In caffe, ./build/tools/caffe train -solver /.../xxx_solover.prototxt -weights /.../xxx_iter_2500.caffemodel 2>&1 | tee /.../your_name.log
+> In caffe, ./build/tools/caffe train (-gpu all) -solver /.../xxx_solover.prototxt -weights /.../xxx_iter_2500.caffemodel 2>&1 | tee /.../your_name.log
 
 ##### Method 3 (Resuming)
 0. restart at a specific point
-> In caffe, ./build/tools/caffe train -solver /.../xxx_solver.prototxt -snapshot /.../xxx_iter_xxxx.solverstate
+> In caffe, ./build/tools/caffe train (-gpu all) -solver /.../xxx_solver.prototxt -snapshot /.../xxx_iter_xxxx.solverstate

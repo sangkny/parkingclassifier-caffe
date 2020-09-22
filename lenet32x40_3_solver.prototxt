@@ -1,4 +1,5 @@
 # The train/test net protocol buffer definition
+# LeNet32x40_4_ive has one more 50 filter convolution+relu and 28 filter conv+relu
 net: "/workspace/parkingclassifier-caffe/LeNet32x40_3_ive.prototxt"
 # test_iter specifies how many forward passes the test should carry out.
 # In the case of MNIST, we have test batch size 100 and 100 test iterations,
@@ -18,9 +19,9 @@ power: 0.75
 # Display every 100 iterations
 display: 100
 # The maximum number of iterations
-max_iter:30000
+max_iter:60000
 # snapshot intermediate results
 snapshot: 500
-snapshot_prefix: "/workspace/parkingclassifier-caffe/lenet40x32_3_ive_2020512_4phase_lr0001_v3"
+snapshot_prefix: "/workspace/parkingclassifier-caffe/20200820_3chs_data/lenet40x32_3_ive_20200820_4phase_lr0001_v3_3chs_br04"
 # solver mode: CPU or GPU
 solver_mode: CPU 

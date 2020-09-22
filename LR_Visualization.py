@@ -37,13 +37,13 @@ def get_caffe_lr(mode, iteration, stepsize, base_lr, max_lr, gamma, power, max_i
     return lr
 
 # Demo of how the LR varies with iterations
-num_iterations = 30000
+num_iterations = 60000
 max_iterations = num_iterations
 #------------ inverse
-base_lr = 0.001
-max_lr = 0.001
-gamma = 0.001
-monentum = 0.9
+base_lr = 0.001 # was 0.001 for parking
+max_lr = 0.01 # which is not used
+gamma = 0.001 # was 0.0001
+momentum = 0.9
 power = 0.75
 #---------------------
 # step--------------
@@ -58,7 +58,6 @@ stepsize = 10000
 lr_trend = list()
 lr_caffe = list()
 mode = 'inv'
-
 print('CAFFE LR mode:' + mode)
 for iter in range(num_iterations):
     lr = get_triangular_lr(iter, stepsize, base_lr, max_lr)
@@ -67,6 +66,8 @@ for iter in range(num_iterations):
     lr1 = get_caffe_lr(mode=mode, iteration=iter,stepsize=stepsize, base_lr=base_lr, max_lr=max_lr, gamma=gamma, power=power, max_iter=max_iterations)
     lr_caffe.append(lr1)
 
+lrInfo = 'mode:{},base_lr:{},max_lr:{},gamma:{},power:{}'.format(mode, base_lr,max_lr, gamma, power)
 #plt.plot(lr_trend)
 plt.plot(lr_caffe)
+plt.title(lrInfo)
 plt.show()

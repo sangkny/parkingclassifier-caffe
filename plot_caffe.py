@@ -12,11 +12,19 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
+logisIn_high = True
 IsPlotSave = True
 TrainTestBoth = True
-FileName = 'train_20200812_40x32_lr0001_v3_30000_3chs_br04'
-dirPath = './20200812_3chs_data_br04'
-logFileName = 'train_20200812_40x32_lr0001_v3_30000_3chs_br04'
+Train_batch_Size = str(512) # training batch_size
+if logisIn_high:
+    FileName = 'train_20200920_lr0001_ga00001_b512_200000_SVGGpu'
+    dirPath = './20200826_3chs_data_br04'
+    logFileName = 'train_20200920_lr0001_ga00001_b512_200000_SVGGpu'
+else:
+    FileName = 'train_20200826_40x32_4_lr0005_v3_3chs_br04_60000'
+    dirPath = './20200826_3chs_data_br04'
+    logFileName = 'train_20200826_40x32_4_lr0005_v3_3chs_br04_60000'
+
 outFile = os.path.join(dirPath,logFileName)
 if TrainTestBoth:
     train_log = pd.read_csv(str(outFile + ".log.train")) # when test only exists, train_log == test_log
@@ -32,12 +40,13 @@ if(train_log.get('accuracy') is None):
 else:
     log_num, log_acc = list(train_log["NumIters"]), list(train_log["accuracy"])
     idx = np.argmax(log_acc)
-    txtstr = 'Train log max acc: {} at {} with idx {}\n '.format(log_acc[idx],int(log_num[idx]), idx)
+    txtstr = 'Train log max acc: {} at {} with idx {}\n '.format(round(log_acc[idx],5),int(log_num[idx]), idx)
     print(txtstr)
 
 log_num, log_acc = list(test_log["NumIters"]), list(test_log["accuracy"])
+log_test_loss, log_train_loss = list(test_log["loss"]), list(train_log["loss"])
 idx = np.argmax(log_acc)
-txtstr = 'Test log max acc: {} at {} with idx {}\n'.format(log_acc[idx],int(log_num[idx]), idx)
+txtstr = 'Test max acc/loss:{}/{} at {} with idx {} , Training Err:{}(b:{})\n'.format(round(log_acc[idx],5),round(log_test_loss[idx],5),int(log_num[idx]), idx, round(log_train_loss[idx],5), Train_batch_Size)
 print(txtstr)
 
 
@@ -47,7 +56,7 @@ fig, ax1 = plt.subplots(figsize=(15, 10))
 size = fig.get_size_inches()*fig.dpi # plot size in pixels
 center = size/2 # center pixel
 print(center)
-fig.text((center[0]/1500),(center[1]/1000),txtstr, fontsize=15)  # (x,y) normalized ratio
+fig.text((center[0]/(2*1500)),(center[1]/(1000)),txtstr, fontsize=15)  # (x,y) normalized ratio
                                                     # can be fig.text((0.5),(0.5),txtstr)
 ax2 = ax1.twinx()
 if train_log.get('accuracy') is None:
@@ -62,6 +71,7 @@ ax1.set_xlabel('iteration')
 ax1.set_ylabel('train loss')
 
 plt.legend([plot0, plot1, plot2, plot3], ['Train Acc', 'Train loss', 'Test Acc', 'Test loss'])
+plt.title(txtstr)
 
 plt.savefig('{}.png'.format(FileName))
 plt.show()
