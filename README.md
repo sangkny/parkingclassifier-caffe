@@ -75,6 +75,9 @@ and it can be used inside the Caffe
   * batch 512 로 하는 것이 가장 잘 되는 것으로 판단됨.
   * Test max acc/loss:0.9963/0.01377 at 165000 with idx 330 , Training Err:0.0304(b:512)
   
+- 20201022: SVG, 그동안 테스트한 59400 으로 다시 100000번까지 training
+- 20201105: HighGpu 20200920 버전을 가지고 이후 ip camera에서 모아진 데이터 중 incorrect 영상 중 refine 하여 augmentation 한후 HighGpu에 추가 후 훈련..
+  
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
 1. I assume that caffe-related files including .prototxt(s) (_solver.prototxt} and _model.prototxt) and resides in the source root (ex. /workspace/)

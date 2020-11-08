@@ -37,23 +37,23 @@ def get_caffe_lr(mode, iteration, stepsize, base_lr, max_lr, gamma, power, max_i
     return lr
 
 # Demo of how the LR varies with iterations
-num_iterations = 60000
+num_iterations = 200000
 max_iterations = num_iterations
 #------------ inverse
 base_lr = 0.001 # was 0.001 for parking
 max_lr = 0.01 # which is not used
-gamma = 0.001 # was 0.0001
+gamma = 0.0001 # was 0.0001
 momentum = 0.9
-power = 0.75
+power = 0.1
 #---------------------
-# step--------------
-# base_lr = 0.01
+# # step--------------
+# base_lr = 0.001
 # max_lr = 0.001
-# gamma = 0.1
+# gamma = 0.0001
 # monentum = 0.9
 # power = 0.75
 # -------------------
-stepsize = 10000
+stepsize = 20000
 
 lr_trend = list()
 lr_caffe = list()

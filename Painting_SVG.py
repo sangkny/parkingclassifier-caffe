@@ -22,6 +22,8 @@ from libs.yolo_io import TXT_EXT
 from libs.ustr import ustr
 from libs.hashableQListWidgetItem import HashableQListWidgetItem
 
+from functools import partial
+
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
 
@@ -132,6 +134,10 @@ class CWidget(QWidget):
         self.settings.load()
         settings = self.settings
 
+        # Load string bundle for i18n
+        self.stringBundle = StringBundle.getBundle()
+        getStr = lambda strId: self.stringBundle.getString(strId)
+
         self.itemsToShapes = {}
         self.shapesToItems = {}
         self.prevLabelText = ''
@@ -147,26 +153,144 @@ class CWidget(QWidget):
         self.drawSquaresOption.setChecked(settings.get(SETTING_DRAW_SQUARE, False))
         self.drawSquaresOption.triggered.connect(self.toogleDrawSquare)
 
+
+        # Actions
+        action = partial(newAction, self)
+        create = action(getStr('crtBox'), self.createShape,
+                        'w', 'new', getStr('crtBoxDetail'), enabled=False)
+        delete = action(getStr('delBox'), self.deleteSelectedShape,
+                        'Delete', 'delete', getStr('delBoxDetail'), enabled=False)
+        copy = action(getStr('dupBox'), self.copySelectedShape,
+                      'Ctrl+D', 'copy', getStr('dupBoxDetail'),
+                      enabled=False)
+        createMode = action(getStr('crtBox'), self.setCreateMode,
+                            'w', 'new', getStr('crtBoxDetail'), enabled=False)
+        editMode = action('&Edit\nRectBox', self.setEditMode,
+                          'Ctrl+J', 'edit', u'Move and edit Boxs', enabled=False)
+        edit = action(getStr('editLabel'), self.editLabel,
+                      'Ctrl+E', 'edit', getStr('editLabelDetail'),
+                      enabled=False)
+        shapeLineColor = action(getStr('shapeLineColor'), self.chshapeLineColor,
+                                icon='color_line', tip=getStr('shapeLineColorDetail'),
+                                enabled=False)
+        shapeFillColor = action(getStr('shapeFillColor'), self.chshapeFillColor,
+                                icon='color', tip=getStr('shapeFillColorDetail'),
+                                enabled=False)
+        advancedMode = action(getStr('advancedMode'), self.toggleAdvancedMode,
+                              'Ctrl+Shift+A', 'expert', getStr('advancedModeDetail'),
+                              checkable=True)
+
         # Store actions for further handling.
         self.actions = struct(create=create, delete=delete, edit=edit, copy=copy,
                               createMode=createMode, editMode=editMode, advancedMode=advancedMode,
-                              shapeLineColor=shapeLineColor, shapeFillColor=shapeFillColor,
-                              zoom=zoom, zoomIn=zoomIn, zoomOut=zoomOut, zoomOrg=zoomOrg,
-                              fitWindow=fitWindow, fitWidth=fitWidth,
-                              zoomActions=zoomActions,
-                              fileMenuActions=(
-                                  open, opendir, save, saveAs, close, resetAll, quit),
-                              beginner=(), advanced=(),
-                              editMenu=(edit, copy, delete,
-                                        None, color1, self.drawSquaresOption),
-                              beginnerContext=(create, edit, copy, delete),
-                              advancedContext=(createMode, editMode, edit, copy,
-                                               delete, shapeLineColor, shapeFillColor),
-                              onLoadActive=(
-                                  close, create, createMode, editMode),
-                              onShapesPresent=(saveAs, hideAll, showAll))
+                              shapeLineColor=shapeLineColor, shapeFillColor=shapeFillColor
+                              # editMenu=(edit, copy, delete,
+                              #           None, color1, self.drawSquaresOption),
+                              # beginnerContext=(create, edit, copy, delete),
+                              # advancedContext=(createMode, editMode, edit, copy,
+                              #                  delete, shapeLineColor, shapeFillColor),
+                              # onLoadActive=(
+                              #     close, create, createMode, editMode),
+                              # onShapesPresent=(saveAs, hideAll, showAll)
+       )
 
+    # sangkny
+    ## Callbacks ##
 
+    def createShape(self):
+        assert self.beginner()
+        self.canvas.setEditing(False)
+        self.actions.create.setEnabled(False)
+
+    def toggleDrawingSensitive(self, drawing=True):
+        """In the middle of drawing, toggling between modes should be disabled."""
+        self.actions.editMode.setEnabled(not drawing)
+        if not drawing and self.beginner():
+            # Cancel creation.
+            print('Cancel creation.')
+            self.canvas.setEditing(True)
+            self.canvas.restoreCursor()
+            self.actions.create.setEnabled(True)
+
+    def toggleDrawMode(self, edit=True):
+        self.canvas.setEditing(edit)
+        self.actions.createMode.setEnabled(edit)
+        self.actions.editMode.setEnabled(not edit)
+
+    def setCreateMode(self):
+        assert self.advanced()
+        self.toggleDrawMode(False)
+
+    def setEditMode(self):
+        assert self.advanced()
+        self.toggleDrawMode(True)
+        self.labelSelectionChanged()
+
+    def editLabel(self):
+        if not self.canvas.editing():
+            return
+        item = self.currentItem()
+        if not item:
+            return
+        text = self.labelDialog.popUp(item.text())
+        if text is not None:
+            item.setText(text)
+            item.setBackground(generateColorByText(text))
+            self.setDirty()
+
+    def toogleDrawSquare(self):
+        self.canvas.setDrawingShapeToSquare(self.drawSquaresOption.isChecked())
+
+    def deleteSelectedShape(self):
+        self.remLabel(self.canvas.deleteSelected())
+        self.setDirty()
+        if self.noShapes():
+            for action in self.actions.onShapesPresent:
+                action.setEnabled(False)
+
+    def copySelectedShape(self):
+        self.addLabel(self.canvas.copySelectedShape())
+        # fix copy and delete
+        self.shapeSelectionChanged(True)
+
+    def chshapeLineColor(self):
+        color = self.colorDialog.getColor(self.lineColor, u'Choose line color',
+                                          default=DEFAULT_LINE_COLOR)
+        if color:
+            self.canvas.selectedShape.line_color = color
+            self.canvas.update()
+            self.setDirty()
+
+    def chshapeFillColor(self):
+        color = self.colorDialog.getColor(self.fillColor, u'Choose fill color',
+                                          default=DEFAULT_FILL_COLOR)
+        if color:
+            self.canvas.selectedShape.fill_color = color
+            self.canvas.update()
+            self.setDirty()
+
+    def toggleAdvancedMode(self, value=True):
+        self._beginner = not value
+        self.canvas.setEditing(True)
+        self.populateModeActions()
+        self.editButton.setVisible(not value)
+        if value:
+            self.actions.createMode.setEnabled(True)
+            self.actions.editMode.setEnabled(False)
+            self.dock.setFeatures(self.dock.features() | self.dockFeatures)
+        else:
+            self.dock.setFeatures(self.dock.features() ^ self.dockFeatures)
+
+    def copyShape(self):
+        self.canvas.endMove(copy=True)
+        self.addLabel(self.canvas.selectedShape)
+        self.setDirty()
+
+    def moveShape(self):
+        self.canvas.endMove(copy=False)
+        self.setDirty()
+
+# CWidget callback functions
     def radioClicked(self):
         for i in range(len(self.radiobtns)):
             if self.radiobtns[i].isChecked():
@@ -208,6 +332,10 @@ class CView(QGraphicsView):
 
         self.setRenderHint(QPainter.HighQualityAntialiasing)
 
+        # # canvas define
+        # self.canvas = Canvas(parent=self)
+        # self.canvas.setDrawingShapeToSquare(settings.get(SETTING_DRAW_SQUARE, False))
+
     def moveEvent(self, e):
         rect = QRectF(self.rect())
         rect.adjust(0, 0, -2, -2)
@@ -220,10 +348,11 @@ class CView(QGraphicsView):
             # 시작점 저장
             self.start = e.pos()
             self.end = e.pos()
-        # sangkny
-        if e.key() == Qt.Key_Control:
-            # Draw rectangle if Ctrl is pressed
-            self.canvas.setDrawingShapeToSquare(True)
+        # # sangkny
+        # # if e.key() == Qt.Key_Control:
+        # #     # Draw rectangle if Ctrl is pressed
+        # #     self.canvas.setDrawingShapeToSquare(True)
+        # self.parent().canvas.setDrawingShapeToSquare(True)
 
     def mouseMoveEvent(self, e):
 
@@ -292,6 +421,7 @@ class CView(QGraphicsView):
                 rect = QRectF(self.start, self.end)
                 self.items.append(self.scene.addEllipse(rect, pen, brush))
 
+
     def mouseReleaseEvent(self, e):
 
         if e.button() == Qt.LeftButton:
@@ -320,6 +450,19 @@ class CView(QGraphicsView):
                 self.items.clear()
                 rect = QRectF(self.start, self.end)
                 self.scene.addEllipse(rect, pen, brush)
+            # # sangkny
+            # self.parent().canvas.setDrawingShapeToSquare(False)
+
+
+# sangkny
+    def keyReleaseEvent(self, event):
+        if event.key() == Qt.Key_Control:
+            self.parent().canvas.setDrawingShapeToSquare(False)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Control:
+            # Draw rectangle if Ctrl is pressed
+            self.parent().canvas.setDrawingShapeToSquare(True)
 
 
 if __name__ == '__main__':

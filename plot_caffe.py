@@ -15,11 +15,12 @@ import matplotlib.pyplot as plt
 logisIn_high = True
 IsPlotSave = True
 TrainTestBoth = True
+TrainTestLossConstrain = True # train loss < test loss for determining maximum test accuracy
 Train_batch_Size = str(512) # training batch_size
 if logisIn_high:
-    FileName = 'train_20200920_lr0001_ga00001_b512_200000_SVGGpu'
+    FileName = 'train_20201107_lr0001_ga0001_b512_200000_HighGpu'
     dirPath = './20200826_3chs_data_br04'
-    logFileName = 'train_20200920_lr0001_ga00001_b512_200000_SVGGpu'
+    logFileName = 'train_20201107_lr0001_ga0001_b512_200000_HighGpu'
 else:
     FileName = 'train_20200826_40x32_4_lr0005_v3_3chs_br04_60000'
     dirPath = './20200826_3chs_data_br04'
@@ -45,8 +46,19 @@ else:
 
 log_num, log_acc = list(test_log["NumIters"]), list(test_log["accuracy"])
 log_test_loss, log_train_loss = list(test_log["loss"]), list(train_log["loss"])
-idx = np.argmax(log_acc)
-txtstr = 'Test max acc/loss:{}/{} at {} with idx {} , Training Err:{}(b:{})\n'.format(round(log_acc[idx],5),round(log_test_loss[idx],5),int(log_num[idx]), idx, round(log_train_loss[idx],5), Train_batch_Size)
+idx = -1 # for maximum accuracy position
+if TrainTestLossConstrain:
+    AccIdx = np.argsort(log_acc)[::-1] # sort accuracy indices descending order
+    o_idx = np.argmax(log_acc)
+    for accidx in range(len(AccIdx)):
+        if(log_test_loss[AccIdx[accidx]]>=log_train_loss[AccIdx[accidx]]):
+            idx = AccIdx[accidx]
+            break
+    if (o_idx != idx):
+        print('Original max idx: {} at {} ({}/{}), and final max idx: {} at {}({}/{}) \n'.format(o_idx, int(log_num[o_idx]), round(log_acc[o_idx],5), round(log_test_loss[o_idx],5), idx, int(log_num[idx]), round(log_acc[idx],5),round(log_test_loss[idx],5)))
+else:
+    idx = np.argmax(log_acc)
+txtstr = 'Test max acc/loss:{}/{} at {} with idx {} , Training Err:{} (b:{})\n'.format(round(log_acc[idx],5),round(log_test_loss[idx],5),int(log_num[idx]), idx, round(log_train_loss[idx],5), Train_batch_Size)
 print(txtstr)
 
 
