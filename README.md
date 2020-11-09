@@ -75,8 +75,12 @@ and it can be used inside the Caffe
   * batch 512 로 하는 것이 가장 잘 되는 것으로 판단됨.
   * Test max acc/loss:0.9963/0.01377 at 165000 with idx 330 , Training Err:0.0304(b:512)
   
-- 20201022: SVG, 그동안 테스트한 59400 으로 다시 100000번까지 training
-- 20201105: HighGpu 20200920 버전을 가지고 이후 ip camera에서 모아진 데이터 중 incorrect 영상 중 refine 하여 augmentation 한후 HighGpu에 추가 후 훈련..
+- 20201022: SVG, 그동안 테스트한 59400 으로 다시 100000번까지 training => 효과가 별로 좋지 않음.
+- 20201107: HighGpu 20200920 버전을 가지고 이후 ip camera에서 모아진 데이터 중 incorrect 영상 중 refine 하여 augmentation 한후 HighGpu에 추가 후 훈련.. from scratch 
+  * 200000까지 training 한 것 중에서 11500 에서 효과적이어서 delievery
+  * 0 에 대한 결과가 너무 많이 나오면 training의 전체회수가 충분할 경우는 (예, 200000) underfitting의 경우(이경우 1의 경우는 아주 적음)이고 너무 많은 경우는 overfitting(1의 incorrect 경우는 너무 적음)
+  * 0/1 이 같은 accuracy를 유지하도록 하는 것이 가장 좋음.
+  
   
 # Procedure 
 0. develop a pytorch model and convert the model into caffe's files using pytorch2caffe project for easy architecture development
@@ -182,7 +186,7 @@ with 0.005 from 0.01** (99.9 at 15000 and its result is **best** so far from str
     * 20200820 conv 와 같은 training set을 가지고 훈련하여 아래 _4와 어떤것이 더 낳은 결과를 낳는 지 보려고 한것.
     * Test log max acc: 0.996 at 23500 with idx 47
       ![20200820_20200817_data_3chs](./train_20200820_40x32_3_lr0001_v3_30000_3chs_br04.png)
-    * 60000 transfer learing 
+    * 60000 transfer learning 
     * Test log max acc: 0.9965 at 47000 with idx 34
       ![20200820_60000](./train_20200820_40x32_3_lr0001_v3_60000_3chs_br04.png)
  - lenet32x40_4 (more convolution)   
@@ -248,3 +252,8 @@ Using docker
 ##### Method 3 (Resuming)
 0. restart at a specific point
 > In caffe, ./build/tools/caffe train (-gpu all) -solver /.../xxx_solver.prototxt -snapshot /.../xxx_iter_xxxx.solverstate
+
+#### Method 4 (proper iteration number)
+0. To select proper iteration number for equal accuracy of 0/1 cases
+1. Too many incorrect 0 cases -> underfitting ==> increase the iteration number
+2. Too many incorrect 1 cases -> overfitting  ==> decrease the iteration number  

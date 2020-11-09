@@ -18,9 +18,9 @@ TrainTestBoth = True
 TrainTestLossConstrain = True # train loss < test loss for determining maximum test accuracy
 Train_batch_Size = str(512) # training batch_size
 if logisIn_high:
-    FileName = 'train_20201107_lr0001_ga0001_b512_200000_HighGpu'
+    FileName = 'train_20201107_lr0001_ga0001_b512_50000_HighGpu'
     dirPath = './20200826_3chs_data_br04'
-    logFileName = 'train_20201107_lr0001_ga0001_b512_200000_HighGpu'
+    logFileName = 'train_20201107_lr0001_ga0001_b512_50000_HighGpu'
 else:
     FileName = 'train_20200826_40x32_4_lr0005_v3_3chs_br04_60000'
     dirPath = './20200826_3chs_data_br04'
