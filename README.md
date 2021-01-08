@@ -256,4 +256,16 @@ Using docker
 #### Method 4 (proper iteration number)
 0. To select proper iteration number for equal accuracy of 0/1 cases
 1. Too many incorrect 0 cases -> underfitting ==> increase the iteration number
-2. Too many incorrect 1 cases -> overfitting  ==> decrease the iteration number  
+2. Too many incorrect 1 cases -> overfitting  ==> decrease the iteration number 
+
+# Optimal Parameters 
+#### base_lr (caffe default: 0.01, sangkny tried 0.001, 0.0001)
+ 0. 20200920_63500 : 0.0001 => delivery
+ 1. 20201107_11500 : 0.001 => delievery 
+ 2. 20201109       : 0.0001 => Trying
+#### max_iteration numbers
+ 0. 200000 was optimal 
+ 1. tried to find out under/overfitting and select optimal iteration numbers in manual 
+ 2. optimal number is not corresponding to best accuray or minimub loss error, be careful.
+#### GPU
+ 0. sangkny/caffe:caffe-ive-v2 is the latest version for GPU (as of 20201109)
